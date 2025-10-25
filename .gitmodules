@@ -1,0 +1,3 @@
+[submodule "libc/zstd"]
+	path = libc/zstd
+	url = https://github.com/facebook/zstd
