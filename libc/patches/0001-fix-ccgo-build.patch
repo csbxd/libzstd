@@ -1,0 +1,189 @@
+From 01033cf4179868d8bda21d662a9094b3cfc5d09c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=B8=8D=E6=8F=92=E7=94=B5?= <r27153733@gmail.com>
+Date: Fri, 31 Oct 2025 00:46:40 +0800
+Subject: [PATCH] fix: ccgo build.
+
+---
+ build/single_file_libs/zstd-in.c       | 1 +
+ build/single_file_libs/zstddeclib-in.c | 1 +
+ lib/common/bits.h                      | 4 ++--
+ lib/common/cpu.h                       | 6 +++---
+ lib/common/xxhash.h                    | 2 +-
+ lib/compress/zstd_compress_internal.h  | 2 +-
+ lib/compress/zstd_fast.c               | 2 +-
+ lib/compress/zstd_lazy.c               | 4 ++--
+ lib/decompress/zstd_decompress_block.c | 6 +++---
+ 9 files changed, 15 insertions(+), 13 deletions(-)
+
+diff --git a/build/single_file_libs/zstd-in.c b/build/single_file_libs/zstd-in.c
+index f381ecc4..af7066ea 100644
+--- a/build/single_file_libs/zstd-in.c
++++ b/build/single_file_libs/zstd-in.c
+@@ -49,6 +49,7 @@
+ #define ZSTD_TRACE 0
+ /* TODO: Can't amalgamate ASM function */
+ #define ZSTD_DISABLE_ASM 1
++#define ZSTD_NO_INTRINSICS 1
+ 
+ /* Include zstd_deps.h first with all the options we need enabled. */
+ #define ZSTD_DEPS_NEED_MALLOC
+diff --git a/build/single_file_libs/zstddeclib-in.c b/build/single_file_libs/zstddeclib-in.c
+index 8d9c1f54..d4d1f457 100644
+--- a/build/single_file_libs/zstddeclib-in.c
++++ b/build/single_file_libs/zstddeclib-in.c
+@@ -45,6 +45,7 @@
+ #define ZSTD_TRACE 0
+ /* TODO: Can't amalgamate ASM function */
+ #define ZSTD_DISABLE_ASM 1
++#define ZSTD_NO_INTRINSICS 1
+ 
+ /* Include zstd_deps.h first with all the options we need enabled. */
+ #define ZSTD_DEPS_NEED_MALLOC
+diff --git a/lib/common/bits.h b/lib/common/bits.h
+index f452f088..10b4610a 100644
+--- a/lib/common/bits.h
++++ b/lib/common/bits.h
+@@ -93,7 +93,7 @@ MEM_STATIC unsigned ZSTD_countLeadingZeros32(U32 val)
+ MEM_STATIC unsigned ZSTD_countTrailingZeros64(U64 val)
+ {
+     assert(val != 0);
+-#if defined(_MSC_VER) && defined(_WIN64)
++#if defined(_MSC_VER) && defined(_WIN64) && !defined(__CCGO__)
+ #  if STATIC_BMI2
+     return (unsigned)_tzcnt_u64(val);
+ #  else
+@@ -105,7 +105,7 @@ MEM_STATIC unsigned ZSTD_countTrailingZeros64(U64 val)
+         __assume(0); /* Should not reach this code path */
+     }
+ #  endif
+-#elif defined(__GNUC__) && (__GNUC__ >= 4) && defined(__LP64__)
++#elif defined(__GNUC__) && (__GNUC__ >= 4) && defined(__LP64__) && !defined(__CCGO__)
+     return (unsigned)__builtin_ctzll(val);
+ #elif defined(__ICCARM__)
+     return (unsigned)__builtin_ctzll(val);
+diff --git a/lib/common/cpu.h b/lib/common/cpu.h
+index 3f15d560..f67ee7d5 100644
+--- a/lib/common/cpu.h
++++ b/lib/common/cpu.h
+@@ -34,7 +34,7 @@ MEM_STATIC ZSTD_cpuid_t ZSTD_cpuid(void) {
+     U32 f1d = 0;
+     U32 f7b = 0;
+     U32 f7c = 0;
+-#if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
++#if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86)) && !defined(__CCGO__)
+ #if !defined(_M_X64) || !defined(__clang__) || __clang_major__ >= 16
+     int reg[4];
+     __cpuid((int*)reg, 0);
+@@ -86,7 +86,7 @@ MEM_STATIC ZSTD_cpuid_t ZSTD_cpuid(void) {
+           : "rdx");
+     }
+ #endif
+-#elif defined(__i386__) && defined(__PIC__) && !defined(__clang__) && defined(__GNUC__)
++#elif defined(__i386__) && defined(__PIC__) && !defined(__clang__) && defined(__GNUC__) && !defined(__CCGO__)
+     /* The following block like the normal cpuid branch below, but gcc
+      * reserves ebx for use of its pic register so we must specially
+      * handle the save and restore to avoid clobbering the register
+@@ -118,7 +118,7 @@ MEM_STATIC ZSTD_cpuid_t ZSTD_cpuid(void) {
+           : "a"(7), "c"(0)
+           : "edx");
+     }
+-#elif defined(__x86_64__) || defined(_M_X64) || defined(__i386__)
++#elif (defined(__x86_64__) || defined(_M_X64) || defined(__i386__)) && !defined(__CCGO__)
+     U32 n;
+     __asm__("cpuid" : "=a"(n) : "a"(0) : "ebx", "ecx", "edx");
+     if (n >= 1) {
+diff --git a/lib/common/xxhash.h b/lib/common/xxhash.h
+index b6af402f..62df9b94 100644
+--- a/lib/common/xxhash.h
++++ b/lib/common/xxhash.h
+@@ -2459,7 +2459,7 @@ static void* XXH_memcpy(void* dest, const void* src, size_t size)
+  * We also use it to prevent unwanted constant folding for AArch64 in
+  * XXH3_initCustomSecret_scalar().
+  */
+-#if defined(__GNUC__) || defined(__clang__)
++#if (defined(__GNUC__) || defined(__clang__)) && !defined(__CCGO__)
+ #  define XXH_COMPILER_GUARD(var) __asm__("" : "+r" (var))
+ #else
+ #  define XXH_COMPILER_GUARD(var) ((void)0)
+diff --git a/lib/compress/zstd_compress_internal.h b/lib/compress/zstd_compress_internal.h
+index ca5e2a4c..b33cb75d 100644
+--- a/lib/compress/zstd_compress_internal.h
++++ b/lib/compress/zstd_compress_internal.h
+@@ -630,7 +630,7 @@ MEM_STATIC int ZSTD_cParam_withinBounds(ZSTD_cParameter cParam, int value)
+ MEM_STATIC const BYTE*
+ ZSTD_selectAddr(U32 index, U32 lowLimit, const BYTE* candidate, const BYTE* backup)
+ {
+-#if defined(__GNUC__) && defined(__x86_64__)
++#if defined(__GNUC__) && defined(__x86_64__) && !defined(__CCGO__)
+     __asm__ (
+         "cmp %1, %2\n"
+         "cmova %3, %0\n"
+diff --git a/lib/compress/zstd_fast.c b/lib/compress/zstd_fast.c
+index ee25bcba..4c4695f9 100644
+--- a/lib/compress/zstd_fast.c
++++ b/lib/compress/zstd_fast.c
+@@ -118,7 +118,7 @@ ZSTD_match4Found_cmov(const BYTE* currentPtr, const BYTE* matchAddress, U32 matc
+      */
+     if (MEM_read32(currentPtr) != MEM_read32(mvalAddr)) return 0;
+     /* force ordering of these tests, which matters once the function is inlined, as they become branches */
+-#if defined(__GNUC__)
++#if defined(__GNUC__) && !defined(__CCGO__)
+     __asm__("");
+ #endif
+     return matchIdx >= idxLowLimit;
+diff --git a/lib/compress/zstd_lazy.c b/lib/compress/zstd_lazy.c
+index 272ebe0e..3bebf6cd 100644
+--- a/lib/compress/zstd_lazy.c
++++ b/lib/compress/zstd_lazy.c
+@@ -1571,7 +1571,7 @@ size_t ZSTD_compressBlock_lazy_generic(
+     }
+ 
+     /* Match Loop */
+-#if defined(__GNUC__) && defined(__x86_64__)
++#if defined(__GNUC__) && defined(__x86_64__) && !defined(__CCGO__)
+     /* I've measured random a 5% speed loss on levels 5 & 6 (greedy) when the
+      * code alignment is perturbed. To fix the instability align the loop on 32-bytes.
+      */
+@@ -1969,7 +1969,7 @@ size_t ZSTD_compressBlock_lazy_extDict_generic(
+     }
+ 
+     /* Match Loop */
+-#if defined(__GNUC__) && defined(__x86_64__)
++#if defined(__GNUC__) && defined(__x86_64__) && !defined(__CCGO__)
+     /* I've measured random a 5% speed loss on levels 5 & 6 (greedy) when the
+      * code alignment is perturbed. To fix the instability align the loop on 32-bytes.
+      */
+diff --git a/lib/decompress/zstd_decompress_block.c b/lib/decompress/zstd_decompress_block.c
+index 862785a4..9905c82a 100644
+--- a/lib/decompress/zstd_decompress_block.c
++++ b/lib/decompress/zstd_decompress_block.c
+@@ -1481,7 +1481,7 @@ ZSTD_decompressSequences_bodySplitLitBuffer( ZSTD_DCtx* dctx,
+                 *
+                 *   https://gist.github.com/terrelln/9889fc06a423fd5ca6e99351564473f4
+                 */
+-#if defined(__GNUC__) && defined(__x86_64__)
++#if defined(__GNUC__) && defined(__x86_64__) && !defined(__CCGO__)
+             __asm__(".p2align 6");
+ #  if __GNUC__ >= 7
+ 	    /* good for gcc-7, gcc-9, and gcc-11 */
+@@ -1543,7 +1543,7 @@ ZSTD_decompressSequences_bodySplitLitBuffer( ZSTD_DCtx* dctx,
+         if (nbSeq > 0) {
+             /* there is remaining lit from extra buffer */
+ 
+-#if defined(__GNUC__) && defined(__x86_64__)
++#if defined(__GNUC__) && defined(__x86_64__) && !defined(__CCGO__)
+             __asm__(".p2align 6");
+             __asm__("nop");
+ #  if __GNUC__ != 7
+@@ -1642,7 +1642,7 @@ ZSTD_decompressSequences_body(ZSTD_DCtx* dctx,
+         ZSTD_initFseState(&seqState.stateML, &seqState.DStream, dctx->MLTptr);
+         assert(dst != NULL);
+ 
+-#if defined(__GNUC__) && defined(__x86_64__)
++#if defined(__GNUC__) && defined(__x86_64__) && !defined(__CCGO__)
+             __asm__(".p2align 6");
+             __asm__("nop");
+ #  if __GNUC__ >= 7
+-- 
+2.51.2
+
