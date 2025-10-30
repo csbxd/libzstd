@@ -1,12 +1,13 @@
 package main
 
 import (
-	ccgo "modernc.org/ccgo/v4/lib"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	ccgo "modernc.org/ccgo/v4/lib"
 )
 
 var (
