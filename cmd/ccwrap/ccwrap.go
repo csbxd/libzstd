@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	extArgs := strings.Split(os.Getenv("EXT_ARGS"), " ")
+	extArgs := strings.Split(os.Getenv("CCWRAP_EXT_ARGS"), " ")
 	args := append(extArgs, os.Args[1:]...)
 	cmd := exec.Command(GetCC(), args...)
 	cmd.Stdin = os.Stdin
@@ -20,7 +20,11 @@ func main() {
 }
 
 func GetCC() string {
-	cc := os.Getenv("CC")
+	cc := os.Getenv("CCWRAP_CC")
+	if cc != "" {
+		return cc
+	}
+	cc = os.Getenv("CC")
 	if cc == "" {
 		cc = "cc"
 	}
