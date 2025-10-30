@@ -1,7 +1,7 @@
-From 01033cf4179868d8bda21d662a9094b3cfc5d09c Mon Sep 17 00:00:00 2001
+From 6835d46bdb4823ba5a29ac6fd3aec8cf15456489 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=E4=B8=8D=E6=8F=92=E7=94=B5?= <r27153733@gmail.com>
-Date: Fri, 31 Oct 2025 00:46:40 +0800
-Subject: [PATCH] fix: ccgo build.
+Date: Fri, 31 Oct 2025 01:41:38 +0800
+Subject: [PATCH] fix: zstd ccgo build.
 
 ---
  build/single_file_libs/zstd-in.c       | 1 +
@@ -9,11 +9,12 @@ Subject: [PATCH] fix: ccgo build.
  lib/common/bits.h                      | 4 ++--
  lib/common/cpu.h                       | 6 +++---
  lib/common/xxhash.h                    | 2 +-
+ lib/common/zstd_deps.h                 | 2 +-
  lib/compress/zstd_compress_internal.h  | 2 +-
  lib/compress/zstd_fast.c               | 2 +-
  lib/compress/zstd_lazy.c               | 4 ++--
  lib/decompress/zstd_decompress_block.c | 6 +++---
- 9 files changed, 15 insertions(+), 13 deletions(-)
+ 10 files changed, 16 insertions(+), 14 deletions(-)
 
 diff --git a/build/single_file_libs/zstd-in.c b/build/single_file_libs/zstd-in.c
 index f381ecc4..af7066ea 100644
@@ -105,6 +106,19 @@ index b6af402f..62df9b94 100644
  #  define XXH_COMPILER_GUARD(var) __asm__("" : "+r" (var))
  #else
  #  define XXH_COMPILER_GUARD(var) ((void)0)
+diff --git a/lib/common/zstd_deps.h b/lib/common/zstd_deps.h
+index 8a9c7cc5..4025ed1f 100644
+--- a/lib/common/zstd_deps.h
++++ b/lib/common/zstd_deps.h
+@@ -40,7 +40,7 @@
+ #include <stddef.h>
+ #include <string.h>
+ 
+-#if defined(__GNUC__) && __GNUC__ >= 4
++#if defined(__GNUC__) && __GNUC__ >= 4 && !defined(__CCGO__)
+ # define ZSTD_memcpy(d,s,l) __builtin_memcpy((d),(s),(l))
+ # define ZSTD_memmove(d,s,l) __builtin_memmove((d),(s),(l))
+ # define ZSTD_memset(p,v,l) __builtin_memset((p),(v),(l))
 diff --git a/lib/compress/zstd_compress_internal.h b/lib/compress/zstd_compress_internal.h
 index ca5e2a4c..b33cb75d 100644
 --- a/lib/compress/zstd_compress_internal.h

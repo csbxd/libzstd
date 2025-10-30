@@ -1,8 +1,8 @@
-// Code generated for linux/amd64 by 'ccgo -std=c17 tmp/zstd.c -o zstd_linux_amd64.go', DO NOT EDIT.
+// Code generated for linux/amd64 by 'ccgo --package-name libzstd -std=c17 /tmp/zstd-build-658442599/zstd.c -o /home/bxd/GolandProjects/libzstd/zstd_linux_amd64.go', DO NOT EDIT.
 
 //go:build linux && amd64
 
-package main
+package libzstd
 
 import (
 	"reflect"
@@ -2144,7 +2144,7 @@ func BIT_initDStream(tls *libc.TLS, bitD uintptr, srcBuffer uintptr, srcSize siz
 	var v1 uint32
 	_, _, _ = lastByte, lastByte1, v1
 	if srcSize < uint64(1) {
-		libc.X__builtin_memset(tls, bitD, 0, libc.Uint64FromInt64(40))
+		libc.Xmemset(tls, bitD, 0, libc.Uint64FromInt64(40))
 		return libc.Uint64FromInt32(-int32(ZSTD_error_srcSize_wrong))
 	}
 	(*BIT_DStream_t)(unsafe.Pointer(bitD)).Fstart = srcBuffer
@@ -2753,7 +2753,7 @@ func FSE_readNCount_body(tls *libc.TLS, normalizedCounter uintptr, maxSVPtr uint
 	if hbSize < uint64(8) {
 		/* This function only works when hbSize >= 8 */
 		*(*[8]int8)(unsafe.Pointer(bp)) = [8]int8{}
-		libc.X__builtin_memcpy(tls, bp, headerBuffer, hbSize)
+		libc.Xmemcpy(tls, bp, headerBuffer, hbSize)
 		countSize = FSE_readNCount(tls, normalizedCounter, maxSVPtr, tableLogPtr, bp, uint64(8))
 		if FSE_isError(tls, countSize) != 0 {
 			return countSize
@@ -2764,7 +2764,7 @@ func FSE_readNCount_body(tls *libc.TLS, normalizedCounter uintptr, maxSVPtr uint
 		return countSize
 	}
 	/* init */
-	libc.X__builtin_memset(tls, normalizedCounter, 0, uint64(*(*uint32)(unsafe.Pointer(maxSVPtr))+libc.Uint32FromInt32(1))*uint64(2)) /* all symbols not present in NCount have a frequency of 0 */
+	libc.Xmemset(tls, normalizedCounter, 0, uint64(*(*uint32)(unsafe.Pointer(maxSVPtr))+libc.Uint32FromInt32(1))*libc.Uint64FromInt64(2)) /* all symbols not present in NCount have a frequency of 0 */
 	bitStream = MEM_readLE32(tls, ip)
 	nbBits = libc.Int32FromUint32(bitStream&uint32(0xF) + uint32(FSE_MIN_TABLELOG)) /* extract tableLog */
 	if nbBits > int32(FSE_TABLELOG_ABSOLUTE_MAX) {
@@ -2971,7 +2971,7 @@ func HUF_readStats_body(tls *libc.TLS, huffWeight uintptr, hwSize size_t, rankSt
 		}
 	}
 	/* collect weight stats */
-	libc.X__builtin_memset(tls, rankStats, 0, libc.Uint64FromInt32(libc.Int32FromInt32(HUF_TABLELOG_MAX)+libc.Int32FromInt32(1))*libc.Uint64FromInt64(4))
+	libc.Xmemset(tls, rankStats, 0, libc.Uint64FromInt32(libc.Int32FromInt32(HUF_TABLELOG_MAX)+libc.Int32FromInt32(1))*libc.Uint64FromInt64(4))
 	weightTotal = uint32(0)
 	n1 = uint32(0)
 	for {
@@ -3234,7 +3234,7 @@ func FSE_buildDTable_internal(tls *libc.TLS, dt uintptr, normalizedCounter uintp
 		;
 		s = s + 1
 	}
-	libc.X__builtin_memcpy(tls, dt, bp, libc.Uint64FromInt64(4))
+	libc.Xmemcpy(tls, dt, bp, libc.Uint64FromInt64(4))
 	/* Spread symbols */
 	if highThreshold == tableSize-uint32(1) {
 		tableMask = uint64(tableSize - uint32(1))
@@ -4963,7 +4963,7 @@ func ZSTD_customCalloc(tls *libc.TLS, size size_t, customMem ZSTD_customMem) (r 
 		/* calloc implemented as malloc+memset;
 		 * not as efficient as calloc, but next best guess for custom malloc */
 		ptr = (*(*func(*libc.TLS, uintptr, size_t) uintptr)(unsafe.Pointer(&struct{ uintptr }{customMem.FcustomAlloc})))(tls, customMem.Fopaque, size)
-		libc.X__builtin_memset(tls, ptr, 0, size)
+		libc.Xmemset(tls, ptr, 0, size)
 		return ptr
 	}
 	return libc.Xcalloc(tls, libc.Uint64FromInt32(libc.Int32FromInt32(1)), size)
@@ -5254,7 +5254,7 @@ func POOL_resize_internal(tls *libc.TLS, ctx uintptr, numThreads size_t) (r int3
 		return int32(1)
 	}
 	/* replace existing thread pool */
-	libc.X__builtin_memcpy(tls, threadPool, (*POOL_ctx)(unsafe.Pointer(ctx)).Fthreads, (*POOL_ctx)(unsafe.Pointer(ctx)).FthreadCapacity*uint64(8))
+	libc.Xmemcpy(tls, threadPool, (*POOL_ctx)(unsafe.Pointer(ctx)).Fthreads, (*POOL_ctx)(unsafe.Pointer(ctx)).FthreadCapacity*libc.Uint64FromInt64(8))
 	ZSTD_customFree(tls, (*POOL_ctx)(unsafe.Pointer(ctx)).Fthreads, (*POOL_ctx)(unsafe.Pointer(ctx)).FcustomMem)
 	(*POOL_ctx)(unsafe.Pointer(ctx)).Fthreads = threadPool
 	/* Initialize additional threads */
@@ -5413,12 +5413,18 @@ type ZSTD_cpuid_t = struct {
 
 func ZSTD_cpuid(tls *libc.TLS) (r ZSTD_cpuid_t) {
 	var cpuid ZSTD_cpuid_t
-	_ = cpuid
-	cpuid.Ff1c = uint32(0)
-	cpuid.Ff1d = uint32(0)
-	cpuid.Ff7b = uint32(0)
-	cpuid.Ff7c = uint32(0)
+	var f1c, f1d, f7b, f7c U32
+	_, _, _, _, _ = cpuid, f1c, f1d, f7b, f7c
+	f1c = uint32(0)
+	f1d = uint32(0)
+	f7b = uint32(0)
+	f7c = uint32(0)
+	cpuid.Ff1c = f1c
+	cpuid.Ff1d = f1d
+	cpuid.Ff7b = f7b
+	cpuid.Ff7c = f7c
 	return cpuid
+	return r
 }
 
 // C documentation
@@ -7252,7 +7258,7 @@ var OF_defaultNormLog = uint32(OF_DEFAULTNORMLOG)
 //	*  Shared functions to include for inlining
 //	*********************************************/
 func ZSTD_copy8(tls *libc.TLS, dst uintptr, src uintptr) {
-	libc.X__builtin_memcpy(tls, dst, src, libc.Uint64FromInt32(libc.Int32FromInt32(8)))
+	libc.Xmemcpy(tls, dst, src, libc.Uint64FromInt32(libc.Int32FromInt32(8)))
 }
 
 // C documentation
@@ -7265,8 +7271,8 @@ func ZSTD_copy16(tls *libc.TLS, dst uintptr, src uintptr) {
 	bp := tls.Alloc(16)
 	defer tls.Free(16)
 	var _ /* copy16_buf at bp+0 */ [16]BYTE
-	libc.X__builtin_memcpy(tls, bp, src, libc.Uint64FromInt32(libc.Int32FromInt32(16)))
-	libc.X__builtin_memcpy(tls, dst, bp, libc.Uint64FromInt32(libc.Int32FromInt32(16)))
+	libc.Xmemcpy(tls, bp, src, libc.Uint64FromInt32(libc.Int32FromInt32(16)))
+	libc.Xmemcpy(tls, dst, bp, libc.Uint64FromInt32(libc.Int32FromInt32(16)))
 }
 
 type ZSTD_overlap_e = int32
@@ -7333,7 +7339,7 @@ func ZSTD_limitCopy(tls *libc.TLS, dst uintptr, dstCapacity size_t, src uintptr,
 	}
 	length = v1
 	if length > uint64(0) {
-		libc.X__builtin_memcpy(tls, dst, src, length)
+		libc.Xmemcpy(tls, dst, src, length)
 	}
 	return length
 }
@@ -8279,7 +8285,7 @@ func HIST_count_simple(tls *libc.TLS, count uintptr, maxSymbolValuePtr uintptr, 
 	end = ip + uintptr(srcSize)
 	maxSymbolValue = *(*uint32)(unsafe.Pointer(maxSymbolValuePtr))
 	largestCount = uint32(0)
-	libc.X__builtin_memset(tls, count, 0, uint64(maxSymbolValue+libc.Uint32FromInt32(1))*uint64(4))
+	libc.Xmemset(tls, count, 0, uint64(maxSymbolValue+libc.Uint32FromInt32(1))*libc.Uint64FromInt64(4))
 	if srcSize == uint64(0) {
 		*(*uint32)(unsafe.Pointer(maxSymbolValuePtr)) = uint32(0)
 		return uint32(0)
@@ -8340,11 +8346,11 @@ func HIST_count_parallel_wksp(tls *libc.TLS, count uintptr, maxSymbolValuePtr ui
 	Counting4 = Counting3 + uintptr(256)*4
 	/* safety checks */
 	if !(sourceSize != 0) {
-		libc.X__builtin_memset(tls, count, 0, countSize)
+		libc.Xmemset(tls, count, 0, countSize)
 		*(*uint32)(unsafe.Pointer(maxSymbolValuePtr)) = uint32(0)
 		return uint64(0)
 	}
-	libc.X__builtin_memset(tls, workSpace, 0, libc.Uint64FromInt32(libc.Int32FromInt32(4)*libc.Int32FromInt32(256))*libc.Uint64FromInt64(4))
+	libc.Xmemset(tls, workSpace, 0, libc.Uint64FromInt32(libc.Int32FromInt32(4)*libc.Int32FromInt32(256))*libc.Uint64FromInt64(4))
 	/* by stripes of 16 bytes */
 	cached = MEM_read32(tls, ip)
 	ip = ip + uintptr(4)
@@ -8689,7 +8695,7 @@ func HUF_readCTableHeader(tls *libc.TLS, ctable uintptr) (r HUF_CTableHeader) {
 	bp := tls.Alloc(16)
 	defer tls.Free(16)
 	var _ /* header at bp+0 */ HUF_CTableHeader
-	libc.X__builtin_memcpy(tls, bp, ctable, libc.Uint64FromInt64(8))
+	libc.Xmemcpy(tls, bp, ctable, libc.Uint64FromInt64(8))
 	return *(*HUF_CTableHeader)(unsafe.Pointer(bp))
 }
 
@@ -8698,10 +8704,10 @@ func HUF_writeCTableHeader(tls *libc.TLS, ctable uintptr, tableLog U32, maxSymbo
 	defer tls.Free(16)
 	var _ /* header at bp+0 */ HUF_CTableHeader
 	_ = libc.Uint64FromInt64(1)
-	libc.X__builtin_memset(tls, bp, 0, libc.Uint64FromInt64(8))
+	libc.Xmemset(tls, bp, 0, libc.Uint64FromInt64(8))
 	(*(*HUF_CTableHeader)(unsafe.Pointer(bp))).FtableLog = uint8(tableLog)
 	(*(*HUF_CTableHeader)(unsafe.Pointer(bp))).FmaxSymbolValue = uint8(maxSymbolValue)
-	libc.X__builtin_memcpy(tls, ctable, bp, libc.Uint64FromInt64(8))
+	libc.Xmemcpy(tls, ctable, bp, libc.Uint64FromInt64(8))
 }
 
 type HUF_WriteCTableWksp = struct {
@@ -8965,7 +8971,7 @@ func HUF_setMaxHeight(tls *libc.TLS, huffNode uintptr, lastNonNull U32, targetNb
 	/* repay normalized cost */
 	noSymbol = uint32(0xF0F0F0F0)
 	/* Get pos of last (smallest = lowest cum. count) symbol per rank */
-	libc.X__builtin_memset(tls, bp, int32(0xF0), libc.Uint64FromInt64(56))
+	libc.Xmemset(tls, bp, int32(0xF0), libc.Uint64FromInt64(56))
 	currentNbBits = targetNbBits
 	pos = n
 	for {
@@ -9252,7 +9258,7 @@ func HUF_sort(tls *libc.TLS, huffNode uintptr, count uintptr, maxSymbolValue U32
 	 * We attribute each symbol to lowerRank's base value, because we want to know where
 	 * each rank begins in the output, so for rank R we want to count ranks R+1 and above.
 	 */
-	libc.X__builtin_memset(tls, rankPosition, 0, libc.Uint64FromInt64(4)*libc.Uint64FromInt32(RANK_POSITION_TABLE_SIZE))
+	libc.Xmemset(tls, rankPosition, 0, libc.Uint64FromInt64(4)*libc.Uint64FromInt32(RANK_POSITION_TABLE_SIZE))
 	n = uint32(0)
 	for {
 		if !(n < maxSymbolValue1) {
@@ -9518,7 +9524,7 @@ func HUF_buildCTable_wksp(tls *libc.TLS, CTable uintptr, count uintptr, maxSymbo
 	if maxSymbolValue > uint32(HUF_SYMBOLVALUE_MAX) {
 		return libc.Uint64FromInt32(-int32(ZSTD_error_maxSymbolValue_tooLarge))
 	}
-	libc.X__builtin_memset(tls, huffNode0, 0, libc.Uint64FromInt64(4096))
+	libc.Xmemset(tls, huffNode0, 0, libc.Uint64FromInt64(4096))
 	/* sort, decreasing order */
 	HUF_sort(tls, huffNode, count, maxSymbolValue, wksp_tables+4096)
 	/* build tree */
@@ -9615,7 +9621,7 @@ type HUF_CStream_t = struct {
 //	 * @returns 0 or an error code.
 //	 */
 func HUF_initCStream(tls *libc.TLS, bitC uintptr, startPtr uintptr, dstCapacity size_t) (r size_t) {
-	libc.X__builtin_memset(tls, bitC, 0, libc.Uint64FromInt64(56))
+	libc.Xmemset(tls, bitC, 0, libc.Uint64FromInt64(56))
 	(*HUF_CStream_t)(unsafe.Pointer(bitC)).FstartPtr = startPtr
 	(*HUF_CStream_t)(unsafe.Pointer(bitC)).Fptr = (*HUF_CStream_t)(unsafe.Pointer(bitC)).FstartPtr
 	(*HUF_CStream_t)(unsafe.Pointer(bitC)).FendPtr = (*HUF_CStream_t)(unsafe.Pointer(bitC)).FstartPtr + uintptr(dstCapacity) - uintptr(8)
@@ -10224,7 +10230,7 @@ func HUF_compress_internal(tls *libc.TLS, dst uintptr, dstSize size_t, src uintp
 		*(*HUF_repeat)(unsafe.Pointer(repeat)) = int32(HUF_repeat_none)
 	}
 	if oldHufTable != 0 {
-		libc.X__builtin_memcpy(tls, oldHufTable, table+1024, libc.Uint64FromInt64(2056))
+		libc.Xmemcpy(tls, oldHufTable, table+1024, libc.Uint64FromInt64(2056))
 	} /* Save new table */
 	return HUF_compressCTable_internal(tls, ostart, op, oend, src, srcSize, nbStreams, table+1024, flags)
 }
@@ -10679,7 +10685,7 @@ func ZSTD_cwksp_reserve_aligned_init_once(tls *libc.TLS, ws uintptr, bytes size_
 		} else {
 			v1 = alignedBytes
 		}
-		libc.X__builtin_memset(tls, ptr, 0, v1)
+		libc.Xmemset(tls, ptr, 0, v1)
 		(*ZSTD_cwksp)(unsafe.Pointer(ws)).FinitOnceStart = ptr
 	}
 	return ptr
@@ -10800,7 +10806,7 @@ func ZSTD_cwksp_mark_tables_clean(tls *libc.TLS, ws uintptr) {
 //	 */
 func ZSTD_cwksp_clean_tables(tls *libc.TLS, ws uintptr) {
 	if (*ZSTD_cwksp)(unsafe.Pointer(ws)).FtableValidEnd < (*ZSTD_cwksp)(unsafe.Pointer(ws)).FtableEnd {
-		libc.X__builtin_memset(tls, (*ZSTD_cwksp)(unsafe.Pointer(ws)).FtableValidEnd, 0, libc.Uint64FromInt64(int64((*ZSTD_cwksp)(unsafe.Pointer(ws)).FtableEnd)-int64((*ZSTD_cwksp)(unsafe.Pointer(ws)).FtableValidEnd)))
+		libc.Xmemset(tls, (*ZSTD_cwksp)(unsafe.Pointer(ws)).FtableValidEnd, 0, libc.Uint64FromInt64(int64((*ZSTD_cwksp)(unsafe.Pointer(ws)).FtableEnd)-int64((*ZSTD_cwksp)(unsafe.Pointer(ws)).FtableValidEnd)))
 	}
 	ZSTD_cwksp_mark_tables_clean(tls, ws)
 }
@@ -10879,7 +10885,7 @@ func ZSTD_cwksp_free(tls *libc.TLS, ws uintptr, customMem ZSTD_customMem) {
 	var ptr uintptr
 	_ = ptr
 	ptr = (*ZSTD_cwksp)(unsafe.Pointer(ws)).Fworkspace
-	libc.X__builtin_memset(tls, ws, 0, libc.Uint64FromInt64(72))
+	libc.Xmemset(tls, ws, 0, libc.Uint64FromInt64(72))
 	ZSTD_customFree(tls, ptr, customMem)
 }
 
@@ -10891,7 +10897,7 @@ func ZSTD_cwksp_free(tls *libc.TLS, ws uintptr, customMem ZSTD_customMem) {
 //	 */
 func ZSTD_cwksp_move(tls *libc.TLS, dst uintptr, src uintptr) {
 	*(*ZSTD_cwksp)(unsafe.Pointer(dst)) = *(*ZSTD_cwksp)(unsafe.Pointer(src))
-	libc.X__builtin_memset(tls, src, 0, libc.Uint64FromInt64(72))
+	libc.Xmemset(tls, src, 0, libc.Uint64FromInt64(72))
 }
 
 func ZSTD_cwksp_reserve_failed(tls *libc.TLS, ws uintptr) (r int32) {
@@ -11680,7 +11686,7 @@ func ZSTD_noCompressBlock(tls *libc.TLS, dst uintptr, dstCapacity size_t, src ui
 		return libc.Uint64FromInt32(-int32(ZSTD_error_dstSize_tooSmall))
 	}
 	MEM_writeLE24(tls, dst, cBlockHeader24)
-	libc.X__builtin_memcpy(tls, dst+uintptr(ZSTD_blockHeaderSize), src, srcSize)
+	libc.Xmemcpy(tls, dst+uintptr(ZSTD_blockHeaderSize), src, srcSize)
 	return ZSTD_blockHeaderSize + srcSize
 }
 
@@ -11867,7 +11873,7 @@ func ZSTD_newRep(tls *libc.TLS, rep uintptr, offBase U32, ll0 U32) (r Repcodes_t
 	bp := tls.Alloc(16)
 	defer tls.Free(16)
 	var _ /* newReps at bp+0 */ Repcodes_t
-	libc.X__builtin_memcpy(tls, bp, rep, libc.Uint64FromInt64(12))
+	libc.Xmemcpy(tls, bp, rep, libc.Uint64FromInt64(12))
 	ZSTD_updateRep(tls, bp, offBase, ll0)
 	return *(*Repcodes_t)(unsafe.Pointer(bp))
 }
@@ -12462,7 +12468,7 @@ func ZSTD_checkDictValidity(tls *libc.TLS, window uintptr, blockEnd uintptr, max
 }
 
 func ZSTD_window_init(tls *libc.TLS, window uintptr) {
-	libc.X__builtin_memset(tls, window, 0, libc.Uint64FromInt64(40))
+	libc.Xmemset(tls, window, 0, libc.Uint64FromInt64(40))
 	(*ZSTD_window_t)(unsafe.Pointer(window)).Fbase = __ccgo_ts + 1432
 	(*ZSTD_window_t)(unsafe.Pointer(window)).FdictBase = __ccgo_ts + 1432
 	_ = libc.Uint64FromInt64(1)                                                                                                           /* Start above ZSTD_DUBT_UNSORTED_MARK */
@@ -12689,7 +12695,7 @@ func ZSTD_noCompressLiterals(tls *libc.TLS, dst uintptr, dstCapacity size_t, src
 		MEM_writeLE32(tls, ostart, uint32(uint64(uint32(set_basic)+libc.Uint32FromInt32(libc.Int32FromInt32(3)<<libc.Int32FromInt32(2)))+srcSize<<libc.Int32FromInt32(4)))
 	default: /* not necessary : flSize is {1,2,3} */
 	}
-	libc.X__builtin_memcpy(tls, ostart+uintptr(flSize), src, srcSize)
+	libc.Xmemcpy(tls, ostart+uintptr(flSize), src, srcSize)
 	return srcSize + uint64(flSize)
 }
 
@@ -12781,7 +12787,7 @@ func ZSTD_compressLiterals(tls *libc.TLS, dst uintptr, dstCapacity size_t, src u
 	singleStream = libc.BoolUint32(srcSize < uint64(256))
 	hType = int32(set_compressed)
 	/* Prepare nextEntropy assuming reusing the existing table */
-	libc.X__builtin_memcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
+	libc.Xmemcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
 	if disableLiteralCompression != 0 {
 		return ZSTD_noCompressLiterals(tls, dst, dstCapacity, src, srcSize)
 	}
@@ -12833,7 +12839,7 @@ func ZSTD_compressLiterals(tls *libc.TLS, dst uintptr, dstCapacity size_t, src u
 	}
 	minGain = ZSTD_minGain(tls, srcSize, strategy)
 	if cLitSize == uint64(0) || cLitSize >= srcSize-minGain || ERR_isError(tls, cLitSize) != 0 {
-		libc.X__builtin_memcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
+		libc.Xmemcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
 		return ZSTD_noCompressLiterals(tls, dst, dstCapacity, src, srcSize)
 	}
 	if cLitSize == uint64(1) {
@@ -12843,7 +12849,7 @@ func ZSTD_compressLiterals(tls *libc.TLS, dst uintptr, dstCapacity size_t, src u
 		 * (it's also necessary to not generate statistics).
 		 * Therefore, in such a case, actively check that all bytes are identical. */
 		if srcSize >= uint64(8) || allBytesIdentical(tls, src, srcSize) != 0 {
-			libc.X__builtin_memcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
+			libc.Xmemcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
 			return ZSTD_compressRleLiteralsBlock(tls, dst, dstCapacity, src, srcSize)
 		}
 	}
@@ -13446,7 +13452,7 @@ _7:
 	return uint64(1)
 _2:
 	;
-	libc.X__builtin_memcpy(tls, nextCTable, prevCTable, prevCTableSize)
+	libc.Xmemcpy(tls, nextCTable, prevCTable, prevCTableSize)
 	return uint64(0)
 _3:
 	;
@@ -13715,7 +13721,7 @@ func ZSTD_compressSubBlock_literal(tls *libc.TLS, hufTable uintptr, hufMetadata 
 		}
 	}
 	if writeEntropy != 0 && (*ZSTD_hufCTablesMetadata_t)(unsafe.Pointer(hufMetadata)).FhType == int32(set_compressed) {
-		libc.X__builtin_memcpy(tls, op, hufMetadata+4, (*ZSTD_hufCTablesMetadata_t)(unsafe.Pointer(hufMetadata)).FhufDesSize)
+		libc.Xmemcpy(tls, op, hufMetadata+4, (*ZSTD_hufCTablesMetadata_t)(unsafe.Pointer(hufMetadata)).FhufDesSize)
 		op = op + uintptr((*ZSTD_hufCTablesMetadata_t)(unsafe.Pointer(hufMetadata)).FhufDesSize)
 		cLitSize = cLitSize + (*ZSTD_hufCTablesMetadata_t)(unsafe.Pointer(hufMetadata)).FhufDesSize
 	}
@@ -13850,7 +13856,7 @@ func ZSTD_compressSubBlock_sequences(tls *libc.TLS, fseTables uintptr, fseMetada
 		Offtype = libc.Uint32FromInt32((*ZSTD_fseCTablesMetadata_t)(unsafe.Pointer(fseMetadata)).FofType)
 		MLtype = libc.Uint32FromInt32((*ZSTD_fseCTablesMetadata_t)(unsafe.Pointer(fseMetadata)).FmlType)
 		*(*BYTE)(unsafe.Pointer(seqHead)) = uint8(LLtype<<libc.Int32FromInt32(6) + Offtype<<libc.Int32FromInt32(4) + MLtype<<libc.Int32FromInt32(2))
-		libc.X__builtin_memcpy(tls, op, fseMetadata+12, (*ZSTD_fseCTablesMetadata_t)(unsafe.Pointer(fseMetadata)).FfseTablesSize)
+		libc.Xmemcpy(tls, op, fseMetadata+12, (*ZSTD_fseCTablesMetadata_t)(unsafe.Pointer(fseMetadata)).FfseTablesSize)
 		op = op + uintptr((*ZSTD_fseCTablesMetadata_t)(unsafe.Pointer(fseMetadata)).FfseTablesSize)
 	} else {
 		repeat = uint32(set_repeat)
@@ -14266,7 +14272,7 @@ func ZSTD_compressSubBlock_multi(tls *libc.TLS, seqStorePtr uintptr, prevCBlock 
 		sp = sp + uintptr(seqCount1)*8
 	}
 	if writeLitEntropy != 0 {
-		libc.X__builtin_memcpy(tls, nextCBlock, prevCBlock, libc.Uint64FromInt64(2064))
+		libc.Xmemcpy(tls, nextCBlock, prevCBlock, libc.Uint64FromInt64(2064))
 	}
 	if writeSeqEntropy != 0 && ZSTD_needSequenceEntropyTables(tls, entropyMetadata+144) != 0 {
 		/* If we haven't written our entropy tables, then we've violated our contract and
@@ -14288,7 +14294,7 @@ func ZSTD_compressSubBlock_multi(tls *libc.TLS, seqStorePtr uintptr, prevCBlock 
 		op = op + uintptr(cSize2)
 		/* We have to regenerate the repcodes because we've skipped some sequences */
 		if sp < send {
-			libc.X__builtin_memcpy(tls, bp+16, prevCBlock+5616, libc.Uint64FromInt64(12))
+			libc.Xmemcpy(tls, bp+16, prevCBlock+5616, libc.Uint64FromInt64(12))
 			seq = sstart
 			for {
 				if !(seq < sp) {
@@ -14300,7 +14306,7 @@ func ZSTD_compressSubBlock_multi(tls *libc.TLS, seqStorePtr uintptr, prevCBlock 
 				;
 				seq += 8
 			}
-			libc.X__builtin_memcpy(tls, nextCBlock+5616, bp+16, libc.Uint64FromInt64(12))
+			libc.Xmemcpy(tls, nextCBlock+5616, bp+16, libc.Uint64FromInt64(12))
 		}
 	}
 	return libc.Uint64FromInt64(int64(op) - int64(ostart))
@@ -14364,7 +14370,7 @@ type FPStats = struct {
 }
 
 func initStats(tls *libc.TLS, fpstats uintptr) {
-	libc.X__builtin_memset(tls, fpstats, 0, libc.Uint64FromInt64(8208))
+	libc.Xmemset(tls, fpstats, 0, libc.Uint64FromInt64(8208))
 }
 
 func addEvents_generic(tls *libc.TLS, fp uintptr, src uintptr, srcSize size_t, samplingRate size_t, hashLog uint32) {
@@ -14388,7 +14394,7 @@ func addEvents_generic(tls *libc.TLS, fp uintptr, src uintptr, srcSize size_t, s
 }
 
 func recordFingerprint_generic(tls *libc.TLS, fp uintptr, src uintptr, srcSize size_t, samplingRate size_t, hashLog uint32) {
-	libc.X__builtin_memset(tls, fp, 0, uint64(4)*(libc.Uint64FromInt32(1)<<hashLog))
+	libc.Xmemset(tls, fp, 0, libc.Uint64FromInt64(4)*(libc.Uint64FromInt32(1)<<hashLog))
 	(*Fingerprint)(unsafe.Pointer(fp)).FnbEvents = uint64(0)
 	addEvents_generic(tls, fp, src, srcSize, samplingRate, hashLog)
 }
@@ -14488,7 +14494,7 @@ func flushEvents(tls *libc.TLS, fpstats uintptr) {
 		n = n + 1
 	}
 	(*FPStats)(unsafe.Pointer(fpstats)).FpastEvents.FnbEvents = (*FPStats)(unsafe.Pointer(fpstats)).FnewEvents.FnbEvents
-	libc.X__builtin_memset(tls, fpstats+4104, 0, libc.Uint64FromInt64(4104))
+	libc.Xmemset(tls, fpstats+4104, 0, libc.Uint64FromInt64(4104))
 }
 
 func removeEvents(tls *libc.TLS, acc uintptr, slice uintptr) {
@@ -14687,7 +14693,7 @@ func ZSTD_createCCtx(tls *libc.TLS) (r uintptr) {
 func ZSTD_initCCtx(tls *libc.TLS, cctx uintptr, memManager ZSTD_customMem) {
 	var err size_t
 	_ = err
-	libc.X__builtin_memset(tls, cctx, 0, libc.Uint64FromInt64(5280))
+	libc.Xmemset(tls, cctx, 0, libc.Uint64FromInt64(5280))
 	(*ZSTD_CCtx)(unsafe.Pointer(cctx)).FcustomMem = memManager
 	(*ZSTD_CCtx)(unsafe.Pointer(cctx)).Fbmi2 = ZSTD_cpuSupportsBmi2(tls)
 	err = ZSTD_CCtx_reset(tls, cctx, int32(ZSTD_reset_parameters))
@@ -14728,7 +14734,7 @@ func ZSTD_initStaticCCtx(tls *libc.TLS, workspace uintptr, workspaceSize size_t)
 	if cctx == libc.UintptrFromInt32(0) {
 		return libc.UintptrFromInt32(0)
 	}
-	libc.X__builtin_memset(tls, cctx, 0, libc.Uint64FromInt64(5280))
+	libc.Xmemset(tls, cctx, 0, libc.Uint64FromInt64(5280))
 	ZSTD_cwksp_move(tls, cctx+704, bp)
 	(*ZSTD_CCtx)(unsafe.Pointer(cctx)).FstaticSize = workspaceSize
 	/* statically sized space. tmpWorkspace never moves (but prev/next block swap places) */
@@ -14751,8 +14757,8 @@ func ZSTD_initStaticCCtx(tls *libc.TLS, workspace uintptr, workspaceSize size_t)
 func ZSTD_clearAllDicts(tls *libc.TLS, cctx uintptr) {
 	ZSTD_customFree(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FlocalDict.FdictBuffer, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FcustomMem)
 	ZSTD_freeCDict(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FlocalDict.Fcdict)
-	libc.X__builtin_memset(tls, cctx+3688, 0, libc.Uint64FromInt64(40))
-	libc.X__builtin_memset(tls, cctx+3736, 0, libc.Uint64FromInt64(24))
+	libc.Xmemset(tls, cctx+3688, 0, libc.Uint64FromInt64(40))
+	libc.Xmemset(tls, cctx+3736, 0, libc.Uint64FromInt64(24))
 	(*ZSTD_CCtx)(unsafe.Pointer(cctx)).Fcdict = libc.UintptrFromInt32(0)
 }
 
@@ -15002,7 +15008,7 @@ func ZSTD_CCtxParams_init(tls *libc.TLS, cctxParams uintptr, compressionLevel in
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_GENERIC))
 	}
-	libc.X__builtin_memset(tls, cctxParams, 0, libc.Uint64FromInt64(224))
+	libc.Xmemset(tls, cctxParams, 0, libc.Uint64FromInt64(224))
 	(*ZSTD_CCtx_params)(unsafe.Pointer(cctxParams)).FcompressionLevel = compressionLevel
 	(*ZSTD_CCtx_params)(unsafe.Pointer(cctxParams)).FfParams.FcontentSizeFlag = int32(1)
 	return uint64(0)
@@ -15015,7 +15021,7 @@ func ZSTD_CCtxParams_init(tls *libc.TLS, cctxParams uintptr, compressionLevel in
 //	 * @param compressionLevel If params are derived from a compression level then that compression level, otherwise ZSTD_NO_CLEVEL.
 //	 */
 func ZSTD_CCtxParams_init_internal(tls *libc.TLS, cctxParams uintptr, params uintptr, compressionLevel int32) {
-	libc.X__builtin_memset(tls, cctxParams, 0, libc.Uint64FromInt64(224))
+	libc.Xmemset(tls, cctxParams, 0, libc.Uint64FromInt64(224))
 	(*ZSTD_CCtx_params)(unsafe.Pointer(cctxParams)).FcParams = (*ZSTD_parameters)(unsafe.Pointer(params)).FcParams
 	(*ZSTD_CCtx_params)(unsafe.Pointer(cctxParams)).FfParams = (*ZSTD_parameters)(unsafe.Pointer(params)).FfParams
 	/* Should not matter, as all cParams are presumed properly defined.
@@ -16564,7 +16570,7 @@ func ZSTD_CCtx_loadDictionary_advanced(tls *libc.TLS, cctx uintptr, dict uintptr
 			}
 			return libc.Uint64FromInt32(-int32(ZSTD_error_memory_allocation))
 		}
-		libc.X__builtin_memcpy(tls, dictBuffer, dict, dictSize)
+		libc.Xmemcpy(tls, dictBuffer, dict, dictSize)
 		(*ZSTD_CCtx)(unsafe.Pointer(cctx)).FlocalDict.FdictBuffer = dictBuffer /* owned ptr to free */
 		(*ZSTD_CCtx)(unsafe.Pointer(cctx)).FlocalDict.Fdict = dictBuffer       /* read-only reference */
 	}
@@ -17514,7 +17520,7 @@ func ZSTD_reset_matchState(tls *libc.TLS, ms uintptr, ws uintptr, cParams uintpt
 		} else {
 			/* When we are not salting we want to always memset the memory */
 			(*ZSTD_MatchState_t)(unsafe.Pointer(ms)).FtagTable = ZSTD_cwksp_reserve_aligned64(tls, ws, tagTableSize)
-			libc.X__builtin_memset(tls, (*ZSTD_MatchState_t)(unsafe.Pointer(ms)).FtagTable, 0, tagTableSize)
+			libc.Xmemset(tls, (*ZSTD_MatchState_t)(unsafe.Pointer(ms)).FtagTable, 0, tagTableSize)
 			(*ZSTD_MatchState_t)(unsafe.Pointer(ms)).FhashSalt = uint64(0)
 		}
 		if (*ZSTD_compressionParameters)(unsafe.Pointer(cParams)).FsearchLog < libc.Uint32FromInt32(libc.Int32FromInt32(6)) {
@@ -17748,7 +17754,7 @@ func ZSTD_resetCCtx_internal(tls *libc.TLS, zc uintptr, params uintptr, pledgedS
 		/* TODO: avoid memset? */
 		ldmHSize = libc.Uint64FromInt32(1) << (*ZSTD_CCtx_params)(unsafe.Pointer(params)).FldmParams.FhashLog
 		(*ZSTD_CCtx)(unsafe.Pointer(zc)).FldmState.FhashTable = ZSTD_cwksp_reserve_aligned64(tls, ws, ldmHSize*uint64(8))
-		libc.X__builtin_memset(tls, (*ZSTD_CCtx)(unsafe.Pointer(zc)).FldmState.FhashTable, 0, ldmHSize*uint64(8))
+		libc.Xmemset(tls, (*ZSTD_CCtx)(unsafe.Pointer(zc)).FldmState.FhashTable, 0, ldmHSize*libc.Uint64FromInt64(8))
 		(*ZSTD_CCtx)(unsafe.Pointer(zc)).FldmSequences = ZSTD_cwksp_reserve_aligned64(tls, ws, maxNbLdmSeq*uint64(12))
 		(*ZSTD_CCtx)(unsafe.Pointer(zc)).FmaxNbLdmSequences = maxNbLdmSeq
 		ZSTD_window_init(tls, zc+1056)
@@ -17776,7 +17782,7 @@ func ZSTD_resetCCtx_internal(tls *libc.TLS, zc uintptr, params uintptr, pledgedS
 		/* TODO: avoid memset? */
 		numBuckets = libc.Uint64FromInt32(1) << ((*ZSTD_CCtx_params)(unsafe.Pointer(params)).FldmParams.FhashLog - (*ZSTD_CCtx_params)(unsafe.Pointer(params)).FldmParams.FbucketSizeLog)
 		(*ZSTD_CCtx)(unsafe.Pointer(zc)).FldmState.FbucketOffsets = ZSTD_cwksp_reserve_buffer(tls, ws, numBuckets)
-		libc.X__builtin_memset(tls, (*ZSTD_CCtx)(unsafe.Pointer(zc)).FldmState.FbucketOffsets, 0, numBuckets)
+		libc.Xmemset(tls, (*ZSTD_CCtx)(unsafe.Pointer(zc)).FldmState.FbucketOffsets, 0, numBuckets)
 	}
 	/* sequences storage */
 	ZSTD_referenceExternalSequences(tls, zc, libc.UintptrFromInt32(0), uint64(0))
@@ -17885,7 +17891,7 @@ func ZSTD_resetCCtx_byAttachingCDict(tls *libc.TLS, cctx uintptr, cdict uintptr,
 	(*ZSTD_CCtx)(unsafe.Pointer(cctx)).FdictID = (*ZSTD_CDict)(unsafe.Pointer(cdict)).FdictID
 	(*ZSTD_CCtx)(unsafe.Pointer(cctx)).FdictContentSize = (*ZSTD_CDict)(unsafe.Pointer(cdict)).FdictContentSize
 	/* copy block state */
-	libc.X__builtin_memcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FprevCBlock, cdict+408, libc.Uint64FromInt64(5632))
+	libc.Xmemcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FprevCBlock, cdict+408, libc.Uint64FromInt64(5632))
 	return uint64(0)
 }
 
@@ -17908,7 +17914,7 @@ func ZSTD_copyCDictTableIntoCCtx(tls *libc.TLS, dst uintptr, src uintptr, tableS
 			i = i + 1
 		}
 	} else {
-		libc.X__builtin_memcpy(tls, dst, src, tableSize*uint64(4))
+		libc.Xmemcpy(tls, dst, src, tableSize*libc.Uint64FromInt64(4))
 	}
 }
 
@@ -17952,7 +17958,7 @@ func ZSTD_resetCCtx_byCopyingCDict(tls *libc.TLS, cctx uintptr, cdict uintptr, _
 	/* copy tag table */
 	if ZSTD_rowMatchFinderUsed(tls, (*ZSTD_compressionParameters)(unsafe.Pointer(cdict_cParams)).Fstrategy, (*ZSTD_CDict)(unsafe.Pointer(cdict)).FuseRowMatchFinder) != 0 {
 		tagTableSize = hSize
-		libc.X__builtin_memcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FmatchState.FtagTable, (*ZSTD_CDict)(unsafe.Pointer(cdict)).FmatchState.FtagTable, tagTableSize)
+		libc.Xmemcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FmatchState.FtagTable, (*ZSTD_CDict)(unsafe.Pointer(cdict)).FmatchState.FtagTable, tagTableSize)
 		(*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FmatchState.FhashSalt = (*ZSTD_CDict)(unsafe.Pointer(cdict)).FmatchState.FhashSalt
 	}
 	/* Zero the hashTable3, since the cdict never fills it */
@@ -17963,7 +17969,7 @@ func ZSTD_resetCCtx_byCopyingCDict(tls *libc.TLS, cctx uintptr, cdict uintptr, _
 		v1 = uint64(0)
 	}
 	h3Size = v1
-	libc.X__builtin_memset(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FmatchState.FhashTable3, 0, h3Size*uint64(4))
+	libc.Xmemset(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FmatchState.FhashTable3, 0, h3Size*libc.Uint64FromInt64(4))
 	ZSTD_cwksp_mark_tables_clean(tls, cctx+704)
 	/* copy dictionary offsets */
 	srcMatchState = cdict + 104
@@ -17974,7 +17980,7 @@ func ZSTD_resetCCtx_byCopyingCDict(tls *libc.TLS, cctx uintptr, cdict uintptr, _
 	(*ZSTD_CCtx)(unsafe.Pointer(cctx)).FdictID = (*ZSTD_CDict)(unsafe.Pointer(cdict)).FdictID
 	(*ZSTD_CCtx)(unsafe.Pointer(cctx)).FdictContentSize = (*ZSTD_CDict)(unsafe.Pointer(cdict)).FdictContentSize
 	/* copy block state */
-	libc.X__builtin_memcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FprevCBlock, cdict+408, libc.Uint64FromInt64(5632))
+	libc.Xmemcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FprevCBlock, cdict+408, libc.Uint64FromInt64(5632))
 	return uint64(0)
 }
 
@@ -18016,7 +18022,7 @@ func ZSTD_copyCCtx_internal(tls *libc.TLS, dstCCtx uintptr, srcCCtx uintptr, fPa
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_stage_wrong))
 	}
-	libc.X__builtin_memcpy(tls, dstCCtx+896, srcCCtx+896, libc.Uint64FromInt64(24))
+	libc.Xmemcpy(tls, dstCCtx+896, srcCCtx+896, libc.Uint64FromInt64(24))
 	*(*ZSTD_CCtx_params)(unsafe.Pointer(bp)) = (*ZSTD_CCtx)(unsafe.Pointer(dstCCtx)).FrequestedParams
 	/* Copy only compression parameters related to tables. */
 	(*(*ZSTD_CCtx_params)(unsafe.Pointer(bp))).FcParams = (*ZSTD_CCtx)(unsafe.Pointer(srcCCtx)).FappliedParams.FcParams
@@ -18042,9 +18048,9 @@ func ZSTD_copyCCtx_internal(tls *libc.TLS, dstCCtx uintptr, srcCCtx uintptr, fPa
 		v2 = uint64(0)
 	}
 	h3Size = v2
-	libc.X__builtin_memcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(dstCCtx)).FblockState.FmatchState.FhashTable, (*ZSTD_CCtx)(unsafe.Pointer(srcCCtx)).FblockState.FmatchState.FhashTable, hSize*uint64(4))
-	libc.X__builtin_memcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(dstCCtx)).FblockState.FmatchState.FchainTable, (*ZSTD_CCtx)(unsafe.Pointer(srcCCtx)).FblockState.FmatchState.FchainTable, chainSize*uint64(4))
-	libc.X__builtin_memcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(dstCCtx)).FblockState.FmatchState.FhashTable3, (*ZSTD_CCtx)(unsafe.Pointer(srcCCtx)).FblockState.FmatchState.FhashTable3, h3Size*uint64(4))
+	libc.Xmemcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(dstCCtx)).FblockState.FmatchState.FhashTable, (*ZSTD_CCtx)(unsafe.Pointer(srcCCtx)).FblockState.FmatchState.FhashTable, hSize*libc.Uint64FromInt64(4))
+	libc.Xmemcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(dstCCtx)).FblockState.FmatchState.FchainTable, (*ZSTD_CCtx)(unsafe.Pointer(srcCCtx)).FblockState.FmatchState.FchainTable, chainSize*libc.Uint64FromInt64(4))
+	libc.Xmemcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(dstCCtx)).FblockState.FmatchState.FhashTable3, (*ZSTD_CCtx)(unsafe.Pointer(srcCCtx)).FblockState.FmatchState.FhashTable3, h3Size*libc.Uint64FromInt64(4))
 	ZSTD_cwksp_mark_tables_clean(tls, dstCCtx+704)
 	/* copy dictionary offsets */
 	srcMatchState = srcCCtx + 3224 + 16
@@ -18055,7 +18061,7 @@ func ZSTD_copyCCtx_internal(tls *libc.TLS, dstCCtx uintptr, srcCCtx uintptr, fPa
 	(*ZSTD_CCtx)(unsafe.Pointer(dstCCtx)).FdictID = (*ZSTD_CCtx)(unsafe.Pointer(srcCCtx)).FdictID
 	(*ZSTD_CCtx)(unsafe.Pointer(dstCCtx)).FdictContentSize = (*ZSTD_CCtx)(unsafe.Pointer(srcCCtx)).FdictContentSize
 	/* copy block state */
-	libc.X__builtin_memcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(dstCCtx)).FblockState.FprevCBlock, (*ZSTD_CCtx)(unsafe.Pointer(srcCCtx)).FblockState.FprevCBlock, libc.Uint64FromInt64(5632))
+	libc.Xmemcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(dstCCtx)).FblockState.FprevCBlock, (*ZSTD_CCtx)(unsafe.Pointer(srcCCtx)).FblockState.FprevCBlock, libc.Uint64FromInt64(5632))
 	return uint64(0)
 }
 
@@ -18411,7 +18417,7 @@ func ZSTD_entropyCompressSeqStore_internal(tls *libc.TLS, dst uintptr, dstCapaci
 	}
 	if nbSeq == uint64(0) {
 		/* Copy the old tables over as if we repeated them */
-		libc.X__builtin_memcpy(tls, nextEntropy+2064, prevEntropy+2064, libc.Uint64FromInt64(3552))
+		libc.Xmemcpy(tls, nextEntropy+2064, prevEntropy+2064, libc.Uint64FromInt64(3552))
 		return libc.Uint64FromInt64(int64(op) - int64(ostart))
 	}
 	v1 = op
@@ -18581,7 +18587,7 @@ func init() {
 }
 
 func ZSTD_storeLastLiterals(tls *libc.TLS, seqStorePtr uintptr, anchor uintptr, lastLLSize size_t) {
-	libc.X__builtin_memcpy(tls, (*SeqStore_t)(unsafe.Pointer(seqStorePtr)).Flit, anchor, lastLLSize)
+	libc.Xmemcpy(tls, (*SeqStore_t)(unsafe.Pointer(seqStorePtr)).Flit, anchor, lastLLSize)
 	*(*uintptr)(unsafe.Pointer(seqStorePtr + 24)) += uintptr(lastLLSize)
 }
 
@@ -18617,7 +18623,7 @@ func ZSTD_postProcessSequenceProducerResult(tls *libc.TLS, outSeqs uintptr, nbEx
 		return libc.Uint64FromInt32(-int32(ZSTD_error_sequenceProducer_failed))
 	}
 	if srcSize == uint64(0) {
-		libc.X__builtin_memset(tls, outSeqs, 0, libc.Uint64FromInt64(16))
+		libc.Xmemset(tls, outSeqs, 0, libc.Uint64FromInt64(16))
 		return uint64(1)
 	}
 	lastSeq = *(*ZSTD_Sequence)(unsafe.Pointer(outSeqs + uintptr(nbExternalSeqs-uint64(1))*16))
@@ -18634,7 +18640,7 @@ func ZSTD_postProcessSequenceProducerResult(tls *libc.TLS, outSeqs uintptr, nbEx
 		return libc.Uint64FromInt32(-int32(ZSTD_error_sequenceProducer_failed))
 	}
 	/* lastSeq is not a block delimiter, so we need to append one. */
-	libc.X__builtin_memset(tls, outSeqs+uintptr(nbExternalSeqs)*16, 0, libc.Uint64FromInt64(16))
+	libc.Xmemset(tls, outSeqs+uintptr(nbExternalSeqs)*16, 0, libc.Uint64FromInt64(16))
 	return nbExternalSeqs + uint64(1)
 	return r
 }
@@ -18851,7 +18857,7 @@ func ZSTD_copyBlockSequences(tls *libc.TLS, seqCollector uintptr, seqStore uintp
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_dstSize_tooSmall))
 	}
-	libc.X__builtin_memcpy(tls, bp, prevRepcodes, libc.Uint64FromInt64(12))
+	libc.Xmemcpy(tls, bp, prevRepcodes, libc.Uint64FromInt64(12))
 	i = uint64(0)
 	for {
 		if !(i < nbInSequences) {
@@ -19118,7 +19124,7 @@ func ZSTD_buildBlockEntropyStats_literals(tls *libc.TLS, src uintptr, srcSize si
 	huffLog = uint32(LitHufLog)
 	repeat = (*ZSTD_hufCTables_t)(unsafe.Pointer(prevHuf)).FrepeatMode
 	/* Prepare nextEntropy assuming reusing the existing table */
-	libc.X__builtin_memcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
+	libc.Xmemcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
 	if literalsCompressionIsDisabled != 0 {
 		(*ZSTD_hufCTablesMetadata_t)(unsafe.Pointer(hufMetadata)).FhType = int32(set_basic)
 		return uint64(0)
@@ -19158,7 +19164,7 @@ func ZSTD_buildBlockEntropyStats_literals(tls *libc.TLS, src uintptr, srcSize si
 		repeat = int32(HUF_repeat_none)
 	}
 	/* Build Huffman Tree */
-	libc.X__builtin_memset(tls, nextHuf, 0, libc.Uint64FromInt64(2056))
+	libc.Xmemset(tls, nextHuf, 0, libc.Uint64FromInt64(2056))
 	huffLog = HUF_optimalTableLog(tls, huffLog, srcSize, *(*uint32)(unsafe.Pointer(bp)), nodeWksp, nodeWkspSize, nextHuf, countWksp, hufFlags)
 	maxBits = HUF_buildCTable_wksp(tls, nextHuf, countWksp, *(*uint32)(unsafe.Pointer(bp)), huffLog, nodeWksp, nodeWkspSize)
 	err_code1 = maxBits
@@ -19176,13 +19182,13 @@ func ZSTD_buildBlockEntropyStats_literals(tls *libc.TLS, src uintptr, srcSize si
 	if repeat != int32(HUF_repeat_none) {
 		oldCSize = HUF_estimateCompressedSize(tls, prevHuf, countWksp, *(*uint32)(unsafe.Pointer(bp)))
 		if oldCSize < srcSize && (oldCSize <= hSize+newCSize || hSize+uint64(12) >= srcSize) {
-			libc.X__builtin_memcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
+			libc.Xmemcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
 			(*ZSTD_hufCTablesMetadata_t)(unsafe.Pointer(hufMetadata)).FhType = int32(set_repeat)
 			return uint64(0)
 		}
 	}
 	if newCSize+hSize >= srcSize {
-		libc.X__builtin_memcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
+		libc.Xmemcpy(tls, nextHuf, prevHuf, libc.Uint64FromInt64(2064))
 		(*ZSTD_hufCTablesMetadata_t)(unsafe.Pointer(hufMetadata)).FhType = int32(set_basic)
 		return uint64(0)
 	}
@@ -19778,9 +19784,9 @@ func ZSTD_compressBlock_splitBlock_internal(tls *libc.TLS, zc uintptr, dst uintp
 	nextSeqStore = zc + 3768 + 320
 	currSeqStore = zc + 3768 + 240
 	numSplits = ZSTD_deriveBlockSplits(tls, zc, partitions, nbSeq)
-	libc.X__builtin_memcpy(tls, bp, (*ZSTD_CCtx)(unsafe.Pointer(zc)).FblockState.FprevCBlock+5616, libc.Uint64FromInt64(12))
-	libc.X__builtin_memcpy(tls, bp+12, (*ZSTD_CCtx)(unsafe.Pointer(zc)).FblockState.FprevCBlock+5616, libc.Uint64FromInt64(12))
-	libc.X__builtin_memset(tls, nextSeqStore, 0, libc.Uint64FromInt64(80))
+	libc.Xmemcpy(tls, bp, (*ZSTD_CCtx)(unsafe.Pointer(zc)).FblockState.FprevCBlock+5616, libc.Uint64FromInt64(12))
+	libc.Xmemcpy(tls, bp+12, (*ZSTD_CCtx)(unsafe.Pointer(zc)).FblockState.FprevCBlock+5616, libc.Uint64FromInt64(12))
+	libc.Xmemset(tls, nextSeqStore, 0, libc.Uint64FromInt64(80))
 	if numSplits == uint64(0) {
 		cSizeSingleBlock = ZSTD_compressSeqStore_singleBlock(tls, zc, zc+976, bp, bp+12, op, dstCapacity, ip, blockSize, lastBlock, uint32(0))
 		err_code = cSizeSingleBlock
@@ -19830,7 +19836,7 @@ func ZSTD_compressBlock_splitBlock_internal(tls *libc.TLS, zc uintptr, dst uintp
 	/* cRep and dRep may have diverged during the compression.
 	 * If so, we use the dRep repcodes for the next block.
 	 */
-	libc.X__builtin_memcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(zc)).FblockState.FprevCBlock+5616, bp, libc.Uint64FromInt64(12))
+	libc.Xmemcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(zc)).FblockState.FprevCBlock+5616, bp, libc.Uint64FromInt64(12))
 	return cSize
 }
 
@@ -20327,7 +20333,7 @@ func ZSTD_writeSkippableFrame(tls *libc.TLS, dst uintptr, dstCapacity size_t, sr
 	}
 	MEM_writeLE32(tls, op, libc.Uint32FromInt32(ZSTD_MAGIC_SKIPPABLE_START)+magicVariant)
 	MEM_writeLE32(tls, op+uintptr(4), uint32(srcSize))
-	libc.X__builtin_memcpy(tls, op+libc.UintptrFromInt32(8), src, srcSize)
+	libc.Xmemcpy(tls, op+libc.UintptrFromInt32(8), src, srcSize)
 	return srcSize + uint64(ZSTD_SKIPPABLEHEADERSIZE)
 }
 
@@ -20608,7 +20614,7 @@ func ZSTD_loadDictionaryContent(tls *libc.TLS, ms uintptr, ls uintptr, ws uintpt
 		} else {
 			if (*ZSTD_CCtx_params)(unsafe.Pointer(params)).FuseRowMatchFinder == int32(ZSTD_ps_enable) {
 				tagTableSize = libc.Uint64FromInt32(1) << (*ZSTD_CCtx_params)(unsafe.Pointer(params)).FcParams.FhashLog
-				libc.X__builtin_memset(tls, (*ZSTD_MatchState_t)(unsafe.Pointer(ms)).FtagTable, 0, tagTableSize)
+				libc.Xmemset(tls, (*ZSTD_MatchState_t)(unsafe.Pointer(ms)).FtagTable, 0, tagTableSize)
 				ZSTD_row_update(tls, ms, iend-uintptr(HASH_READ_SIZE))
 			} else {
 				ZSTD_insertAndFindFirstIndex(tls, ms, iend-uintptr(HASH_READ_SIZE))
@@ -21228,7 +21234,7 @@ func ZSTD_initCDict_internal(tls *libc.TLS, cdict uintptr, dictBuffer uintptr, d
 			return libc.Uint64FromInt32(-int32(ZSTD_error_memory_allocation))
 		}
 		(*ZSTD_CDict)(unsafe.Pointer(cdict)).FdictContent = internalBuffer
-		libc.X__builtin_memcpy(tls, internalBuffer, dictBuffer, dictSize)
+		libc.Xmemcpy(tls, internalBuffer, dictBuffer, dictSize)
 	}
 	(*ZSTD_CDict)(unsafe.Pointer(cdict)).FdictContentSize = dictSize
 	(*ZSTD_CDict)(unsafe.Pointer(cdict)).FdictContentType = dictContentType
@@ -21296,7 +21302,7 @@ func ZSTD_createCDict_advanced(tls *libc.TLS, dictBuffer uintptr, dictSize size_
 	bp := tls.Alloc(224)
 	defer tls.Free(224)
 	var _ /* cctxParams at bp+0 */ ZSTD_CCtx_params
-	libc.X__builtin_memset(tls, bp, 0, libc.Uint64FromInt64(224))
+	libc.Xmemset(tls, bp, 0, libc.Uint64FromInt64(224))
 	ZSTD_CCtxParams_init(tls, bp, 0)
 	(*(*ZSTD_CCtx_params)(unsafe.Pointer(bp))).FcParams = cParams
 	(*(*ZSTD_CCtx_params)(unsafe.Pointer(bp))).FcustomMem = customMem
@@ -22290,7 +22296,7 @@ func ZSTD_CCtx_init_compressStream2(tls *libc.TLS, cctx uintptr, endOp ZSTD_EndD
 		}
 		return err_code
 	} /* Init the local dict if present. */
-	libc.X__builtin_memset(tls, cctx+3736, 0, libc.Uint64FromInt64(24)) /* single usage */
+	libc.Xmemset(tls, cctx+3736, 0, libc.Uint64FromInt64(24)) /* single usage */
 	/* only one can be set */
 	if (*ZSTD_CCtx)(unsafe.Pointer(cctx)).Fcdict != 0 && !((*ZSTD_CCtx)(unsafe.Pointer(cctx)).FlocalDict.Fcdict != 0) {
 		/* Let the cdict's compression level take priority over the requested params.
@@ -22697,7 +22703,7 @@ func ZSTD_transferSequences_wBlockDelim(tls *libc.TLS, cctx uintptr, seqPos uint
 			dictSize = uint32(0)
 		}
 	}
-	libc.X__builtin_memcpy(tls, bp, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FprevCBlock+5616, libc.Uint64FromInt64(12))
+	libc.Xmemcpy(tls, bp, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FprevCBlock+5616, libc.Uint64FromInt64(12))
 	for {
 		if !(uint64(idx) < inSeqsSize && ((*(*ZSTD_Sequence)(unsafe.Pointer(inSeqs + uintptr(idx)*16))).FmatchLength != uint32(0) || (*(*ZSTD_Sequence)(unsafe.Pointer(inSeqs + uintptr(idx)*16))).Foffset != uint32(0))) {
 			break
@@ -22760,7 +22766,7 @@ func ZSTD_transferSequences_wBlockDelim(tls *libc.TLS, cctx uintptr, seqPos uint
 			}
 		}
 	}
-	libc.X__builtin_memcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FnextCBlock+5616, bp, libc.Uint64FromInt64(12))
+	libc.Xmemcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FnextCBlock+5616, bp, libc.Uint64FromInt64(12))
 	if (*(*ZSTD_Sequence)(unsafe.Pointer(inSeqs + uintptr(idx)*16))).FlitLength != 0 {
 		ZSTD_storeLastLiterals(tls, cctx+976, ip, uint64((*(*ZSTD_Sequence)(unsafe.Pointer(inSeqs + uintptr(idx)*16))).FlitLength))
 		ip = ip + uintptr((*(*ZSTD_Sequence)(unsafe.Pointer(inSeqs + uintptr(idx)*16))).FlitLength)
@@ -22818,7 +22824,7 @@ func ZSTD_transferSequences_noDelim(tls *libc.TLS, cctx uintptr, seqPos uintptr,
 			dictSize = uint64(0)
 		}
 	}
-	libc.X__builtin_memcpy(tls, bp, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FprevCBlock+5616, libc.Uint64FromInt64(12))
+	libc.Xmemcpy(tls, bp, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FprevCBlock+5616, libc.Uint64FromInt64(12))
 	for endPosInSequence != 0 && uint64(idx) < inSeqsSize && !(finalMatchSplit != 0) {
 		currSeq = *(*ZSTD_Sequence)(unsafe.Pointer(inSeqs + uintptr(idx)*16))
 		litLength = currSeq.FlitLength
@@ -22903,7 +22909,7 @@ func ZSTD_transferSequences_noDelim(tls *libc.TLS, cctx uintptr, seqPos uintptr,
 	}
 	(*ZSTD_SequencePosition)(unsafe.Pointer(seqPos)).Fidx = idx
 	(*ZSTD_SequencePosition)(unsafe.Pointer(seqPos)).FposInSequence = endPosInSequence
-	libc.X__builtin_memcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FnextCBlock+5616, bp, libc.Uint64FromInt64(12))
+	libc.Xmemcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FnextCBlock+5616, bp, libc.Uint64FromInt64(12))
 	iend = iend - uintptr(bytesAdjustment)
 	if ip != iend {
 		/* Store any last literals */
@@ -23244,7 +23250,7 @@ func ZSTD_convertBlockSequences(tls *libc.TLS, cctx uintptr, inSeqs uintptr, nbS
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_externalSequences_invalid))
 	}
-	libc.X__builtin_memcpy(tls, bp, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FprevCBlock+5616, libc.Uint64FromInt64(12))
+	libc.Xmemcpy(tls, bp, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FprevCBlock+5616, libc.Uint64FromInt64(12))
 	/* check end condition */
 	/* Convert Sequences from public format to internal format */
 	if !(repcodeResolution != 0) {
@@ -23297,7 +23303,7 @@ func ZSTD_convertBlockSequences(tls *libc.TLS, cctx uintptr, inSeqs uintptr, nbS
 			}
 		}
 	}
-	libc.X__builtin_memcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FnextCBlock+5616, bp, libc.Uint64FromInt64(12))
+	libc.Xmemcpy(tls, (*ZSTD_CCtx)(unsafe.Pointer(cctx)).FblockState.FnextCBlock+5616, bp, libc.Uint64FromInt64(12))
 	return uint64(0)
 }
 
@@ -24607,7 +24613,7 @@ func ZSTD_getParams_internal(tls *libc.TLS, compressionLevel int32, srcSizeHint 
 	var _ /* params at bp+0 */ ZSTD_parameters
 	_ = cParams
 	cParams = ZSTD_getCParams_internal(tls, compressionLevel, srcSizeHint, dictSize, mode)
-	libc.X__builtin_memset(tls, bp, 0, libc.Uint64FromInt64(40))
+	libc.Xmemset(tls, bp, 0, libc.Uint64FromInt64(40))
 	(*(*ZSTD_parameters)(unsafe.Pointer(bp))).FcParams = cParams
 	(*(*ZSTD_parameters)(unsafe.Pointer(bp))).FfParams.FcontentSizeFlag = int32(1)
 	return *(*ZSTD_parameters)(unsafe.Pointer(bp))
@@ -30936,7 +30942,7 @@ func ZSTD_rescaleFreqs(tls *libc.TLS, optPtr uintptr, src uintptr, srcSize size_
 				34: uint32(1),
 				35: uint32(1),
 			}
-			libc.X__builtin_memcpy(tls, (*optState_t)(unsafe.Pointer(optPtr)).FlitLengthFreq, bp+100, libc.Uint64FromInt64(144))
+			libc.Xmemcpy(tls, (*optState_t)(unsafe.Pointer(optPtr)).FlitLengthFreq, bp+100, libc.Uint64FromInt64(144))
 			(*optState_t)(unsafe.Pointer(optPtr)).FlitLengthSum = sum_u32(tls, bp+100, libc.Uint64FromInt32(libc.Int32FromInt32(MaxLL)+libc.Int32FromInt32(1)))
 			ml1 = uint32(0)
 			for {
@@ -30984,7 +30990,7 @@ func ZSTD_rescaleFreqs(tls *libc.TLS, optPtr uintptr, src uintptr, srcSize size_
 				30: uint32(1),
 				31: uint32(1),
 			}
-			libc.X__builtin_memcpy(tls, (*optState_t)(unsafe.Pointer(optPtr)).FoffCodeFreq, bp+244, libc.Uint64FromInt64(128))
+			libc.Xmemcpy(tls, (*optState_t)(unsafe.Pointer(optPtr)).FoffCodeFreq, bp+244, libc.Uint64FromInt64(128))
 			(*optState_t)(unsafe.Pointer(optPtr)).FoffCodeSum = sum_u32(tls, bp+244, libc.Uint64FromInt32(libc.Int32FromInt32(MaxOff)+libc.Int32FromInt32(1)))
 		}
 	} else { /* new block : scale down accumulated statistics */
@@ -31976,7 +31982,7 @@ func ZSTD_compressBlock_opt_generic(tls *libc.TLS, ms uintptr, seqStore uintptr,
 	*(*U32)(unsafe.Pointer(bp)) = (*ZSTD_MatchState_t)(unsafe.Pointer(ms)).FnextToUpdate
 	opt = (*optState_t)(unsafe.Pointer(optStatePtr)).FpriceTable
 	matches = (*optState_t)(unsafe.Pointer(optStatePtr)).FmatchTable
-	libc.X__builtin_memset(tls, bp+4, 0, libc.Uint64FromInt64(28))
+	libc.Xmemset(tls, bp+4, 0, libc.Uint64FromInt64(28))
 	if (*ZSTD_MatchState_t)(unsafe.Pointer(ms)).FldmSeqStore != 0 {
 		v3 = *(*RawSeqStore_t)(unsafe.Pointer((*ZSTD_MatchState_t)(unsafe.Pointer(ms)).FldmSeqStore))
 	} else {
@@ -32020,7 +32026,7 @@ func ZSTD_compressBlock_opt_generic(tls *libc.TLS, ms uintptr, seqStore uintptr,
 		 */
 		(*(*ZSTD_optimal_t)(unsafe.Pointer(opt))).Fprice = libc.Int32FromUint32(ZSTD_litLengthPrice(tls, litlen, optStatePtr, optLevel))
 		_ = libc.Uint64FromInt64(1)
-		libc.X__builtin_memcpy(tls, opt+16, rep, libc.Uint64FromInt64(12))
+		libc.Xmemcpy(tls, opt+16, rep, libc.Uint64FromInt64(12))
 		/* large match -> immediate encoding */
 		maxML = (*(*ZSTD_match_t)(unsafe.Pointer(matches + uintptr(*(*U32)(unsafe.Pointer(bp + 88))-uint32(1))*8))).Flen1
 		maxOffBase = (*(*ZSTD_match_t)(unsafe.Pointer(matches + uintptr(*(*U32)(unsafe.Pointer(bp + 88))-uint32(1))*8))).Foff
@@ -32100,7 +32106,7 @@ func ZSTD_compressBlock_opt_generic(tls *libc.TLS, ms uintptr, seqStore uintptr,
 						prev = cur - prevMatch.Fmlen
 						*(*Repcodes_t)(unsafe.Pointer(bp + 92)) = ZSTD_newRep(tls, opt+uintptr(prev)*28+16, prevMatch.Foff, libc.BoolUint32((*(*ZSTD_optimal_t)(unsafe.Pointer(opt + uintptr(prev)*28))).Flitlen == uint32(0)))
 						*(*ZSTD_optimal_t)(unsafe.Pointer(opt + uintptr(cur+uint32(1))*28)) = prevMatch /* mlen & offbase */
-						libc.X__builtin_memcpy(tls, opt+uintptr(cur+uint32(1))*28+16, bp+92, libc.Uint64FromInt64(12))
+						libc.Xmemcpy(tls, opt+uintptr(cur+uint32(1))*28+16, bp+92, libc.Uint64FromInt64(12))
 						(*(*ZSTD_optimal_t)(unsafe.Pointer(opt + uintptr(cur+uint32(1))*28))).Flitlen = uint32(1)
 						(*(*ZSTD_optimal_t)(unsafe.Pointer(opt + uintptr(cur+uint32(1))*28))).Fprice = with1literal
 						if last_pos < cur+uint32(1) {
@@ -32118,7 +32124,7 @@ func ZSTD_compressBlock_opt_generic(tls *libc.TLS, ms uintptr, seqStore uintptr,
 				/* just finished a match => alter offset history */
 				prev1 = cur - (*(*ZSTD_optimal_t)(unsafe.Pointer(opt + uintptr(cur)*28))).Fmlen
 				*(*Repcodes_t)(unsafe.Pointer(bp + 104)) = ZSTD_newRep(tls, opt+uintptr(prev1)*28+16, (*(*ZSTD_optimal_t)(unsafe.Pointer(opt + uintptr(cur)*28))).Foff, libc.BoolUint32((*(*ZSTD_optimal_t)(unsafe.Pointer(opt + uintptr(prev1)*28))).Flitlen == uint32(0)))
-				libc.X__builtin_memcpy(tls, opt+uintptr(cur)*28+16, bp+104, libc.Uint64FromInt64(12))
+				libc.Xmemcpy(tls, opt+uintptr(cur)*28+16, bp+104, libc.Uint64FromInt64(12))
 			}
 			/* last match must start at a minimum distance of 8 from oend */
 			if inr > ilimit {
@@ -32213,9 +32219,9 @@ func ZSTD_compressBlock_opt_generic(tls *libc.TLS, ms uintptr, seqStore uintptr,
 		if (*(*ZSTD_optimal_t)(unsafe.Pointer(bp + 4))).Flitlen == uint32(0) {
 			/* finishing on a match : update offset history */
 			*(*Repcodes_t)(unsafe.Pointer(bp + 120)) = ZSTD_newRep(tls, opt+uintptr(cur)*28+16, (*(*ZSTD_optimal_t)(unsafe.Pointer(bp + 4))).Foff, libc.BoolUint32((*(*ZSTD_optimal_t)(unsafe.Pointer(opt + uintptr(cur)*28))).Flitlen == uint32(0)))
-			libc.X__builtin_memcpy(tls, rep, bp+120, libc.Uint64FromInt64(12))
+			libc.Xmemcpy(tls, rep, bp+120, libc.Uint64FromInt64(12))
 		} else {
-			libc.X__builtin_memcpy(tls, rep, bp+4+16, libc.Uint64FromInt64(12))
+			libc.Xmemcpy(tls, rep, bp+4+16, libc.Uint64FromInt64(12))
 			cur = cur - (*(*ZSTD_optimal_t)(unsafe.Pointer(bp + 4))).Flitlen
 		}
 		/* Let's write the shortest path solution.
@@ -32304,7 +32310,7 @@ func ZSTD_initStats_ultra(tls *libc.TLS, ms uintptr, seqStore uintptr, rep uintp
 	bp := tls.Alloc(16)
 	defer tls.Free(16)
 	var _ /* tmpRep at bp+0 */ [3]U32 /* updated rep codes will sink here */
-	libc.X__builtin_memcpy(tls, bp, rep, libc.Uint64FromInt64(12))
+	libc.Xmemcpy(tls, bp, rep, libc.Uint64FromInt64(12))
 	/* first block */
 	/* no ldm */
 	/* no dictionary */
@@ -32884,7 +32890,7 @@ func ZSTDMT_serialState_reset(tls *libc.TLS, serialState uintptr, seqPool uintpt
 	if (*(*ZSTD_CCtx_params)(unsafe.Pointer(bp))).FldmParams.FenableLdm == int32(ZSTD_ps_enable) {
 		ZSTD_ldm_adjustParameters(tls, bp+96, bp+4)
 	} else {
-		libc.X__builtin_memset(tls, bp+96, 0, libc.Uint64FromInt64(24))
+		libc.Xmemset(tls, bp+96, 0, libc.Uint64FromInt64(24))
 	}
 	(*SerialState)(unsafe.Pointer(serialState)).FnextJobID = uint32(0)
 	if (*(*ZSTD_CCtx_params)(unsafe.Pointer(bp))).FfParams.FchecksumFlag != 0 {
@@ -32914,8 +32920,8 @@ func ZSTDMT_serialState_reset(tls *libc.TLS, serialState uintptr, seqPool uintpt
 			return int32(1)
 		}
 		/* Zero the tables */
-		libc.X__builtin_memset(tls, (*SerialState)(unsafe.Pointer(serialState)).FldmState.FhashTable, 0, hashSize)
-		libc.X__builtin_memset(tls, (*SerialState)(unsafe.Pointer(serialState)).FldmState.FbucketOffsets, 0, numBuckets)
+		libc.Xmemset(tls, (*SerialState)(unsafe.Pointer(serialState)).FldmState.FhashTable, 0, hashSize)
+		libc.Xmemset(tls, (*SerialState)(unsafe.Pointer(serialState)).FldmState.FbucketOffsets, 0, numBuckets)
 		/* Update window state and fill hash table with dict */
 		(*SerialState)(unsafe.Pointer(serialState)).FldmState.FloadedDictEnd = uint32(0)
 		if dictSize > uint64(0) {
@@ -32945,7 +32951,7 @@ func ZSTDMT_serialState_init(tls *libc.TLS, serialState uintptr) (r int32) {
 	var initError int32
 	_ = initError
 	initError = 0
-	libc.X__builtin_memset(tls, serialState, 0, libc.Uint64FromInt64(2648))
+	libc.Xmemset(tls, serialState, 0, libc.Uint64FromInt64(2648))
 	initError = initError | libc.Xpthread_mutex_init(tls, serialState, libc.UintptrFromInt32(0))
 	initError = initError | libc.Xpthread_cond_init(tls, serialState+40, libc.UintptrFromInt32(0))
 	initError = initError | libc.Xpthread_mutex_init(tls, serialState+2520, libc.UintptrFromInt32(0))
@@ -33430,7 +33436,7 @@ func ZSTDMT_releaseAllJobResources(tls *libc.TLS, mtctx uintptr) {
 		cond = (*(*ZSTDMT_jobDescription)(unsafe.Pointer((*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).Fjobs + uintptr(jobID)*456))).Fjob_cond
 		ZSTDMT_releaseBuffer(tls, (*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).FbufPool, (*(*ZSTDMT_jobDescription)(unsafe.Pointer((*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).Fjobs + uintptr(jobID)*456))).FdstBuff)
 		/* Clear the job description, but keep the mutex/cond */
-		libc.X__builtin_memset(tls, (*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).Fjobs+uintptr(jobID)*456, 0, libc.Uint64FromInt64(456))
+		libc.Xmemset(tls, (*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).Fjobs+uintptr(jobID)*456, 0, libc.Uint64FromInt64(456))
 		(*(*ZSTDMT_jobDescription)(unsafe.Pointer((*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).Fjobs + uintptr(jobID)*456))).Fjob_mutex = mutex
 		(*(*ZSTDMT_jobDescription)(unsafe.Pointer((*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).Fjobs + uintptr(jobID)*456))).Fjob_cond = cond
 		goto _1
@@ -34040,7 +34046,7 @@ func ZSTDMT_flushProduced(tls *libc.TLS, mtctx uintptr, output uintptr, blockToF
 		} /* compression is ongoing or completed */
 		toFlush = v1
 		if toFlush > uint64(0) {
-			libc.X__builtin_memcpy(tls, (*ZSTD_outBuffer)(unsafe.Pointer(output)).Fdst+uintptr((*ZSTD_outBuffer)(unsafe.Pointer(output)).Fpos), (*(*ZSTDMT_jobDescription)(unsafe.Pointer((*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).Fjobs + uintptr(wJobID)*456))).FdstBuff.Fstart+uintptr((*(*ZSTDMT_jobDescription)(unsafe.Pointer((*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).Fjobs + uintptr(wJobID)*456))).FdstFlushed), toFlush)
+			libc.Xmemcpy(tls, (*ZSTD_outBuffer)(unsafe.Pointer(output)).Fdst+uintptr((*ZSTD_outBuffer)(unsafe.Pointer(output)).Fpos), (*(*ZSTDMT_jobDescription)(unsafe.Pointer((*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).Fjobs + uintptr(wJobID)*456))).FdstBuff.Fstart+uintptr((*(*ZSTDMT_jobDescription)(unsafe.Pointer((*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).Fjobs + uintptr(wJobID)*456))).FdstFlushed), toFlush)
 		}
 		*(*size_t)(unsafe.Pointer(output + 16)) += toFlush
 		(*(*ZSTDMT_jobDescription)(unsafe.Pointer((*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).Fjobs + uintptr(wJobID)*456))).FdstFlushed += toFlush                              /* can write : this value is only used by mtctx */
@@ -34378,7 +34384,7 @@ func ZSTDMT_compressStream_generic(tls *libc.TLS, mtctx uintptr, output uintptr,
 			if syncPoint.Fflush != 0 && endOp == int32(ZSTD_e_continue) {
 				endOp = int32(ZSTD_e_flush)
 			}
-			libc.X__builtin_memcpy(tls, (*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).FinBuff.Fbuffer.Fstart+uintptr((*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).FinBuff.Ffilled), (*ZSTD_inBuffer)(unsafe.Pointer(input)).Fsrc+uintptr((*ZSTD_inBuffer)(unsafe.Pointer(input)).Fpos), syncPoint.FtoLoad)
+			libc.Xmemcpy(tls, (*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).FinBuff.Fbuffer.Fstart+uintptr((*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).FinBuff.Ffilled), (*ZSTD_inBuffer)(unsafe.Pointer(input)).Fsrc+uintptr((*ZSTD_inBuffer)(unsafe.Pointer(input)).Fpos), syncPoint.FtoLoad)
 			*(*size_t)(unsafe.Pointer(input + 16)) += syncPoint.FtoLoad
 			(*ZSTDMT_CCtx)(unsafe.Pointer(mtctx)).FinBuff.Ffilled += syncPoint.FtoLoad
 			forwardInputProgress = libc.BoolUint32(syncPoint.FtoLoad > uint64(0))
@@ -34495,7 +34501,7 @@ func HUF_getDTableDesc(tls *libc.TLS, table uintptr) (r DTableDesc) {
 	bp := tls.Alloc(16)
 	defer tls.Free(16)
 	var _ /* dtd at bp+0 */ DTableDesc
-	libc.X__builtin_memcpy(tls, bp, table, libc.Uint64FromInt64(4))
+	libc.Xmemcpy(tls, bp, table, libc.Uint64FromInt64(4))
 	return *(*DTableDesc)(unsafe.Pointer(bp))
 }
 
@@ -34806,7 +34812,7 @@ func HUF_readDTableX1_wksp(tls *libc.TLS, DTable uintptr, src uintptr, srcSize s
 	} /* DTable too small, Huffman tree cannot fit in */
 	(*(*DTableDesc)(unsafe.Pointer(bp + 8))).FtableType = uint8(0)
 	(*(*DTableDesc)(unsafe.Pointer(bp + 8))).FtableLog = uint8(*(*U32)(unsafe.Pointer(bp)))
-	libc.X__builtin_memcpy(tls, DTable, bp+8, libc.Uint64FromInt64(4))
+	libc.Xmemcpy(tls, DTable, bp+8, libc.Uint64FromInt64(4))
 	/* Compute symbols and rankStart given rankVal:
 	 *
 	 * rankVal already contains the number of values of each weight.
@@ -35309,9 +35315,9 @@ func HUF_decompress4X1_usingDTable_internal_fast_c_loop(tls *libc.TLS, args uint
 	oend = (*HUF_DecompressFastArgs)(unsafe.Pointer(args)).Foend
 	ilowest = (*HUF_DecompressFastArgs)(unsafe.Pointer(args)).Filowest
 	/* Copy the arguments to local variables */
-	libc.X__builtin_memcpy(tls, bp, args+64, libc.Uint64FromInt64(32))
-	libc.X__builtin_memcpy(tls, bp+32, args, libc.Uint64FromInt64(32))
-	libc.X__builtin_memcpy(tls, bp+64, args+32, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, bp, args+64, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, bp+32, args, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, bp+64, args+32, libc.Uint64FromInt64(32))
 	for {
 		/* Assert loop preconditions */
 		stream = 0
@@ -35497,9 +35503,9 @@ func HUF_decompress4X1_usingDTable_internal_fast_c_loop(tls *libc.TLS, args uint
 _out:
 	;
 	/* Save the final values of each of the state variables back to args. */
-	libc.X__builtin_memcpy(tls, args+64, bp, libc.Uint64FromInt64(32))
-	libc.X__builtin_memcpy(tls, args, bp+32, libc.Uint64FromInt64(32))
-	libc.X__builtin_memcpy(tls, args+32, bp+64, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, args+64, bp, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, args, bp+32, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, args+32, bp+64, libc.Uint64FromInt64(32))
 }
 
 // C documentation
@@ -35688,7 +35694,7 @@ func HUF_buildDEltX2(tls *libc.TLS, symbol U32, nbBits U32, baseSeq U32, level i
 	var _ /* val at bp+4 */ U32
 	*(*U32)(unsafe.Pointer(bp + 4)) = HUF_buildDEltX2U32(tls, symbol, nbBits, baseSeq, level)
 	_ = libc.Uint64FromInt64(1)
-	libc.X__builtin_memcpy(tls, bp, bp+4, libc.Uint64FromInt64(4))
+	libc.Xmemcpy(tls, bp, bp+4, libc.Uint64FromInt64(4))
 	return *(*HUF_DEltX2)(unsafe.Pointer(bp))
 }
 
@@ -35788,8 +35794,8 @@ _3:
 			break
 		}
 		*(*U64)(unsafe.Pointer(bp)) = HUF_buildDEltX2U64(tls, uint32((*sortedSymbol_t)(unsafe.Pointer(ptr)).Fsymbol), nbBits, baseSeq, level)
-		libc.X__builtin_memcpy(tls, DTableRank+libc.UintptrFromInt32(0)*4, bp, libc.Uint64FromInt64(8))
-		libc.X__builtin_memcpy(tls, DTableRank+libc.UintptrFromInt32(2)*4, bp, libc.Uint64FromInt64(8))
+		libc.Xmemcpy(tls, DTableRank+libc.UintptrFromInt32(0)*4, bp, libc.Uint64FromInt64(8))
+		libc.Xmemcpy(tls, DTableRank+libc.UintptrFromInt32(2)*4, bp, libc.Uint64FromInt64(8))
 		DTableRank = DTableRank + uintptr(4)*4
 		goto _12
 	_12:
@@ -35805,10 +35811,10 @@ _4:
 			break
 		}
 		*(*U64)(unsafe.Pointer(bp + 8)) = HUF_buildDEltX2U64(tls, uint32((*sortedSymbol_t)(unsafe.Pointer(ptr)).Fsymbol), nbBits, baseSeq, level)
-		libc.X__builtin_memcpy(tls, DTableRank+libc.UintptrFromInt32(0)*4, bp+8, libc.Uint64FromInt64(8))
-		libc.X__builtin_memcpy(tls, DTableRank+libc.UintptrFromInt32(2)*4, bp+8, libc.Uint64FromInt64(8))
-		libc.X__builtin_memcpy(tls, DTableRank+libc.UintptrFromInt32(4)*4, bp+8, libc.Uint64FromInt64(8))
-		libc.X__builtin_memcpy(tls, DTableRank+libc.UintptrFromInt32(6)*4, bp+8, libc.Uint64FromInt64(8))
+		libc.Xmemcpy(tls, DTableRank+libc.UintptrFromInt32(0)*4, bp+8, libc.Uint64FromInt64(8))
+		libc.Xmemcpy(tls, DTableRank+libc.UintptrFromInt32(2)*4, bp+8, libc.Uint64FromInt64(8))
+		libc.Xmemcpy(tls, DTableRank+libc.UintptrFromInt32(4)*4, bp+8, libc.Uint64FromInt64(8))
+		libc.Xmemcpy(tls, DTableRank+libc.UintptrFromInt32(6)*4, bp+8, libc.Uint64FromInt64(8))
 		DTableRank = DTableRank + uintptr(8)*4
 		goto _13
 	_13:
@@ -35829,10 +35835,10 @@ _5:
 			if !(DTableRank != DTableRankEnd) {
 				break
 			}
-			libc.X__builtin_memcpy(tls, DTableRank+libc.UintptrFromInt32(0)*4, bp+16, libc.Uint64FromInt64(8))
-			libc.X__builtin_memcpy(tls, DTableRank+libc.UintptrFromInt32(2)*4, bp+16, libc.Uint64FromInt64(8))
-			libc.X__builtin_memcpy(tls, DTableRank+libc.UintptrFromInt32(4)*4, bp+16, libc.Uint64FromInt64(8))
-			libc.X__builtin_memcpy(tls, DTableRank+libc.UintptrFromInt32(6)*4, bp+16, libc.Uint64FromInt64(8))
+			libc.Xmemcpy(tls, DTableRank+libc.UintptrFromInt32(0)*4, bp+16, libc.Uint64FromInt64(8))
+			libc.Xmemcpy(tls, DTableRank+libc.UintptrFromInt32(2)*4, bp+16, libc.Uint64FromInt64(8))
+			libc.Xmemcpy(tls, DTableRank+libc.UintptrFromInt32(4)*4, bp+16, libc.Uint64FromInt64(8))
+			libc.Xmemcpy(tls, DTableRank+libc.UintptrFromInt32(6)*4, bp+16, libc.Uint64FromInt64(8))
 			goto _15
 		_15:
 			;
@@ -35868,20 +35874,20 @@ func HUF_fillDTableX2Level2(tls *libc.TLS, DTable uintptr, targetLog U32, consum
 		skipSize = libc.Int32FromUint32(*(*U32)(unsafe.Pointer(rankVal + uintptr(minWeight)*4)))
 		switch length {
 		case uint32(2):
-			libc.X__builtin_memcpy(tls, DTable, bp, libc.Uint64FromInt64(8))
+			libc.Xmemcpy(tls, DTable, bp, libc.Uint64FromInt64(8))
 		case uint32(4):
-			libc.X__builtin_memcpy(tls, DTable+libc.UintptrFromInt32(0)*4, bp, libc.Uint64FromInt64(8))
-			libc.X__builtin_memcpy(tls, DTable+libc.UintptrFromInt32(2)*4, bp, libc.Uint64FromInt64(8))
+			libc.Xmemcpy(tls, DTable+libc.UintptrFromInt32(0)*4, bp, libc.Uint64FromInt64(8))
+			libc.Xmemcpy(tls, DTable+libc.UintptrFromInt32(2)*4, bp, libc.Uint64FromInt64(8))
 		default:
 			i = 0
 			for {
 				if !(i < skipSize) {
 					break
 				}
-				libc.X__builtin_memcpy(tls, DTable+uintptr(i)*4+libc.UintptrFromInt32(0)*4, bp, libc.Uint64FromInt64(8))
-				libc.X__builtin_memcpy(tls, DTable+uintptr(i)*4+libc.UintptrFromInt32(2)*4, bp, libc.Uint64FromInt64(8))
-				libc.X__builtin_memcpy(tls, DTable+uintptr(i)*4+libc.UintptrFromInt32(4)*4, bp, libc.Uint64FromInt64(8))
-				libc.X__builtin_memcpy(tls, DTable+uintptr(i)*4+libc.UintptrFromInt32(6)*4, bp, libc.Uint64FromInt64(8))
+				libc.Xmemcpy(tls, DTable+uintptr(i)*4+libc.UintptrFromInt32(0)*4, bp, libc.Uint64FromInt64(8))
+				libc.Xmemcpy(tls, DTable+uintptr(i)*4+libc.UintptrFromInt32(2)*4, bp, libc.Uint64FromInt64(8))
+				libc.Xmemcpy(tls, DTable+uintptr(i)*4+libc.UintptrFromInt32(4)*4, bp, libc.Uint64FromInt64(8))
+				libc.Xmemcpy(tls, DTable+uintptr(i)*4+libc.UintptrFromInt32(6)*4, bp, libc.Uint64FromInt64(8))
 				goto _1
 			_1:
 				;
@@ -35988,8 +35994,8 @@ func HUF_readDTableX2_wksp(tls *libc.TLS, DTable uintptr, src uintptr, srcSize s
 		return libc.Uint64FromInt32(-int32(ZSTD_error_GENERIC))
 	}
 	rankStart = wksp + 676 + uintptr(1)*4
-	libc.X__builtin_memset(tls, wksp+624, 0, libc.Uint64FromInt64(52))
-	libc.X__builtin_memset(tls, wksp+676, 0, libc.Uint64FromInt64(60))
+	libc.Xmemset(tls, wksp+624, 0, libc.Uint64FromInt64(52))
+	libc.Xmemset(tls, wksp+676, 0, libc.Uint64FromInt64(60))
 	_ = libc.Uint64FromInt64(1) /* if compiler fails here, assertion is wrong */
 	if maxTableLog > uint32(HUF_TABLELOG_MAX) {
 		return libc.Uint64FromInt32(-int32(ZSTD_error_tableLog_tooLarge))
@@ -36095,7 +36101,7 @@ func HUF_readDTableX2_wksp(tls *libc.TLS, DTable uintptr, src uintptr, srcSize s
 	HUF_fillDTableX2(tls, dt, maxTableLog, wksp+736, wksp+676, wksp, maxW, *(*U32)(unsafe.Pointer(bp))+uint32(1))
 	(*(*DTableDesc)(unsafe.Pointer(bp + 8))).FtableLog = uint8(maxTableLog)
 	(*(*DTableDesc)(unsafe.Pointer(bp + 8))).FtableType = uint8(1)
-	libc.X__builtin_memcpy(tls, DTable, bp+8, libc.Uint64FromInt64(4))
+	libc.Xmemcpy(tls, DTable, bp+8, libc.Uint64FromInt64(4))
 	return iSize
 }
 
@@ -36103,7 +36109,7 @@ func HUF_decodeSymbolX2(tls *libc.TLS, op uintptr, DStream uintptr, dt uintptr, 
 	var val size_t
 	_ = val
 	val = BIT_lookBitsFast(tls, DStream, dtLog) /* note : dtLog >= 1 */
-	libc.X__builtin_memcpy(tls, op, dt+uintptr(val)*4, libc.Uint64FromInt32(libc.Int32FromInt32(2)))
+	libc.Xmemcpy(tls, op, dt+uintptr(val)*4, libc.Uint64FromInt32(libc.Int32FromInt32(2)))
 	BIT_skipBits(tls, DStream, uint32((*(*HUF_DEltX2)(unsafe.Pointer(dt + uintptr(val)*4))).FnbBits))
 	return uint32((*(*HUF_DEltX2)(unsafe.Pointer(dt + uintptr(val)*4))).Flength)
 }
@@ -36112,7 +36118,7 @@ func HUF_decodeLastSymbolX2(tls *libc.TLS, op uintptr, DStream uintptr, dt uintp
 	var val size_t
 	_ = val
 	val = BIT_lookBitsFast(tls, DStream, dtLog) /* note : dtLog >= 1 */
-	libc.X__builtin_memcpy(tls, op, dt+uintptr(val)*4, libc.Uint64FromInt32(libc.Int32FromInt32(1)))
+	libc.Xmemcpy(tls, op, dt+uintptr(val)*4, libc.Uint64FromInt32(libc.Int32FromInt32(1)))
 	if libc.Int32FromUint8((*(*HUF_DEltX2)(unsafe.Pointer(dt + uintptr(val)*4))).Flength) == int32(1) {
 		BIT_skipBits(tls, DStream, uint32((*(*HUF_DEltX2)(unsafe.Pointer(dt + uintptr(val)*4))).FnbBits))
 	} else {
@@ -36375,9 +36381,9 @@ func HUF_decompress4X2_usingDTable_internal_fast_c_loop(tls *libc.TLS, args uint
 	dtable = (*HUF_DecompressFastArgs)(unsafe.Pointer(args)).Fdt
 	ilowest = (*HUF_DecompressFastArgs)(unsafe.Pointer(args)).Filowest
 	/* Copy the arguments to local registers. */
-	libc.X__builtin_memcpy(tls, bp, args+64, libc.Uint64FromInt64(32))
-	libc.X__builtin_memcpy(tls, bp+32, args, libc.Uint64FromInt64(32))
-	libc.X__builtin_memcpy(tls, bp+64, args+32, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, bp, args+64, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, bp+32, args, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, bp+64, args+32, libc.Uint64FromInt64(32))
 	oend[0] = (*(*[4]uintptr)(unsafe.Pointer(bp + 64)))[int32(1)]
 	oend[int32(1)] = (*(*[4]uintptr)(unsafe.Pointer(bp + 64)))[int32(2)]
 	oend[int32(2)] = (*(*[4]uintptr)(unsafe.Pointer(bp + 64)))[int32(3)]
@@ -36683,9 +36689,9 @@ func HUF_decompress4X2_usingDTable_internal_fast_c_loop(tls *libc.TLS, args uint
 _out:
 	;
 	/* Save the final values of each of the state variables back to args. */
-	libc.X__builtin_memcpy(tls, args+64, bp, libc.Uint64FromInt64(32))
-	libc.X__builtin_memcpy(tls, args, bp+32, libc.Uint64FromInt64(32))
-	libc.X__builtin_memcpy(tls, args+32, bp+64, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, args+64, bp, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, args, bp+32, libc.Uint64FromInt64(32))
+	libc.Xmemcpy(tls, args+32, bp+64, libc.Uint64FromInt64(32))
 }
 
 func HUF_decompress4X2_usingDTable_internal_fast(tls *libc.TLS, dst uintptr, dstSize size_t, cSrc uintptr, cSrcSize size_t, DTable uintptr, __ccgo_fp_loopFn HUF_DecompressFastLoopFn) (r size_t) {
@@ -37021,11 +37027,11 @@ func HUF_decompress1X_DCtx_wksp(tls *libc.TLS, dctx uintptr, dst uintptr, dstSiz
 		return libc.Uint64FromInt32(-int32(ZSTD_error_corruption_detected))
 	} /* invalid */
 	if cSrcSize == dstSize {
-		libc.X__builtin_memcpy(tls, dst, cSrc, dstSize)
+		libc.Xmemcpy(tls, dst, cSrc, dstSize)
 		return dstSize
 	} /* not compressed */
 	if cSrcSize == uint64(1) {
-		libc.X__builtin_memset(tls, dst, libc.Int32FromUint8(*(*BYTE)(unsafe.Pointer(cSrc))), dstSize)
+		libc.Xmemset(tls, dst, libc.Int32FromUint8(*(*BYTE)(unsafe.Pointer(cSrc))), dstSize)
 		return dstSize
 	} /* RLE */
 	algoNb = HUF_selectDecoder(tls, dstSize, cSrcSize)
@@ -37443,7 +37449,7 @@ func ZSTD_initDDict_internal(tls *libc.TLS, ddict uintptr, dict uintptr, dictSiz
 		if !(internalBuffer != 0) {
 			return libc.Uint64FromInt32(-int32(ZSTD_error_memory_allocation))
 		}
-		libc.X__builtin_memcpy(tls, internalBuffer, dict, dictSize)
+		libc.Xmemcpy(tls, internalBuffer, dict, dictSize)
 	}
 	(*ZSTD_DDict)(unsafe.Pointer(ddict)).FdictSize = dictSize
 	*(*HUF_DTable)(unsafe.Pointer(ddict + 24 + 10264)) = libc.Uint32FromInt32(libc.Int32FromInt32(ZSTD_HUFFDTABLE_CAPACITY_LOG) * libc.Int32FromInt32(0x1000001)) /* cover both little and big endian */
@@ -37524,7 +37530,7 @@ func ZSTD_initStaticDDict(tls *libc.TLS, sBuffer uintptr, sBufferSize size_t, di
 		return libc.UintptrFromInt32(0)
 	}
 	if dictLoadMethod == int32(ZSTD_dlm_byCopy) {
-		libc.X__builtin_memcpy(tls, ddict+libc.UintptrFromInt32(1)*27352, dict, dictSize) /* local copy */
+		libc.Xmemcpy(tls, ddict+libc.UintptrFromInt32(1)*27352, dict, dictSize) /* local copy */
 		dict = ddict + uintptr(1)*27352
 	}
 	if ZSTD_isError(tls, ZSTD_initDDict_internal(tls, ddict, dict, dictSize, int32(ZSTD_dlm_byRef), dictContentType)) != 0 {
@@ -38011,7 +38017,7 @@ func ZSTD_copyDCtx(tls *libc.TLS, dstDCtx uintptr, srcDCtx uintptr) {
 	var toCopy size_t
 	_ = toCopy
 	toCopy = libc.Uint64FromInt64(int64(dstDCtx+30240) - int64(dstDCtx))
-	libc.X__builtin_memcpy(tls, dstDCtx, srcDCtx, toCopy) /* no need to copy workspace */
+	libc.Xmemcpy(tls, dstDCtx, srcDCtx, toCopy) /* no need to copy workspace */
 }
 
 // C documentation
@@ -38164,11 +38170,11 @@ func ZSTD_getFrameHeader_advanced(tls *libc.TLS, zfhPtr uintptr, src uintptr, sr
 			**/
 			toCopy = v1
 			MEM_writeLE32(tls, bp, uint32(ZSTD_MAGICNUMBER))
-			libc.X__builtin_memcpy(tls, bp, src, toCopy)
+			libc.Xmemcpy(tls, bp, src, toCopy)
 			if MEM_readLE32(tls, bp) != uint32(ZSTD_MAGICNUMBER) {
 				/* not a zstd frame : let's check if it's a skippable frame */
 				MEM_writeLE32(tls, bp, uint32(ZSTD_MAGIC_SKIPPABLE_START))
-				libc.X__builtin_memcpy(tls, bp, src, toCopy)
+				libc.Xmemcpy(tls, bp, src, toCopy)
 				if MEM_readLE32(tls, bp)&uint32(ZSTD_MAGIC_SKIPPABLE_MASK) != uint32(ZSTD_MAGIC_SKIPPABLE_START) {
 					if 0 != 0 {
 						_force_has_format_string(tls, __ccgo_ts+6917, 0)
@@ -38179,14 +38185,14 @@ func ZSTD_getFrameHeader_advanced(tls *libc.TLS, zfhPtr uintptr, src uintptr, sr
 		}
 		return minInputSize
 	}
-	libc.X__builtin_memset(tls, zfhPtr, 0, libc.Uint64FromInt64(48)) /* not strictly necessary, but static analyzers may not understand that zfhPtr will be read only if return value is zero, since they are 2 different signals */
+	libc.Xmemset(tls, zfhPtr, 0, libc.Uint64FromInt64(48)) /* not strictly necessary, but static analyzers may not understand that zfhPtr will be read only if return value is zero, since they are 2 different signals */
 	if format != int32(ZSTD_f_zstd1_magicless) && MEM_readLE32(tls, src) != uint32(ZSTD_MAGICNUMBER) {
 		if MEM_readLE32(tls, src)&uint32(ZSTD_MAGIC_SKIPPABLE_MASK) == uint32(ZSTD_MAGIC_SKIPPABLE_START) {
 			/* skippable frame */
 			if srcSize < uint64(ZSTD_SKIPPABLEHEADERSIZE) {
 				return uint64(ZSTD_SKIPPABLEHEADERSIZE)
 			} /* magic number + frame length */
-			libc.X__builtin_memset(tls, zfhPtr, 0, libc.Uint64FromInt64(48))
+			libc.Xmemset(tls, zfhPtr, 0, libc.Uint64FromInt64(48))
 			(*ZSTD_FrameHeader)(unsafe.Pointer(zfhPtr)).FframeType = int32(ZSTD_skippableFrame)
 			(*ZSTD_FrameHeader)(unsafe.Pointer(zfhPtr)).FdictID = MEM_readLE32(tls, src) - uint32(ZSTD_MAGIC_SKIPPABLE_START)
 			(*ZSTD_FrameHeader)(unsafe.Pointer(zfhPtr)).FheaderSize = uint32(ZSTD_SKIPPABLEHEADERSIZE)
@@ -38392,7 +38398,7 @@ func ZSTD_readSkippableFrame(tls *libc.TLS, dst uintptr, dstCapacity size_t, mag
 	}
 	/* deliver payload */
 	if skippableContentSize > uint64(0) && dst != libc.UintptrFromInt32(0) {
-		libc.X__builtin_memcpy(tls, dst, src+libc.UintptrFromInt32(ZSTD_SKIPPABLEHEADERSIZE), skippableContentSize)
+		libc.Xmemcpy(tls, dst, src+libc.UintptrFromInt32(ZSTD_SKIPPABLEHEADERSIZE), skippableContentSize)
 	}
 	if magicVariant != libc.UintptrFromInt32(0) {
 		*(*uint32)(unsafe.Pointer(magicVariant)) = magicNumber - uint32(ZSTD_MAGIC_SKIPPABLE_START)
@@ -38534,7 +38540,7 @@ func ZSTD_findFrameSizeInfo(tls *libc.TLS, src uintptr, srcSize size_t, format Z
 	var _ /* frameSizeInfo at bp+0 */ ZSTD_frameSizeInfo
 	var _ /* zfh at bp+24 */ ZSTD_FrameHeader
 	_, _, _, _, _, _, _ = cBlockSize, ip, ipstart, nbBlocks, remainingSize, ret, v1
-	libc.X__builtin_memset(tls, bp, 0, libc.Uint64FromInt64(24))
+	libc.Xmemset(tls, bp, 0, libc.Uint64FromInt64(24))
 	if format == int32(ZSTD_f_zstd1) && srcSize >= uint64(ZSTD_SKIPPABLEHEADERSIZE) && MEM_readLE32(tls, src)&uint32(ZSTD_MAGIC_SKIPPABLE_MASK) == uint32(ZSTD_MAGIC_SKIPPABLE_START) {
 		(*(*ZSTD_frameSizeInfo)(unsafe.Pointer(bp))).FcompressedSize = readSkippableFrameSize(tls, src, srcSize)
 		return *(*ZSTD_frameSizeInfo)(unsafe.Pointer(bp))
@@ -38742,7 +38748,7 @@ func ZSTD_setRleBlock(tls *libc.TLS, dst uintptr, dstCapacity size_t, b BYTE, re
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_dstBuffer_null))
 	}
-	libc.X__builtin_memset(tls, dst, libc.Int32FromUint8(b), regenSize)
+	libc.Xmemset(tls, dst, libc.Int32FromUint8(b), regenSize)
 	return regenSize
 }
 
@@ -39205,7 +39211,7 @@ _1:
 	if (*ZSTD_DCtx)(unsafe.Pointer(dctx)).Fformat == int32(ZSTD_f_zstd1) { /* allows header */
 		/* to read skippable magic number */
 		if MEM_readLE32(tls, src)&uint32(ZSTD_MAGIC_SKIPPABLE_MASK) == uint32(ZSTD_MAGIC_SKIPPABLE_START) { /* skippable frame */
-			libc.X__builtin_memcpy(tls, dctx+95940, src, srcSize)
+			libc.Xmemcpy(tls, dctx+95940, src, srcSize)
 			(*ZSTD_DCtx)(unsafe.Pointer(dctx)).Fexpected = uint64(ZSTD_SKIPPABLEHEADERSIZE) - srcSize /* remaining to load to get full skippable frame header */
 			(*ZSTD_DCtx)(unsafe.Pointer(dctx)).Fstage = int32(ZSTDds_decodeSkippableHeader)
 			return uint64(0)
@@ -39215,13 +39221,13 @@ _1:
 	if ZSTD_isError(tls, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FheaderSize) != 0 {
 		return (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FheaderSize
 	}
-	libc.X__builtin_memcpy(tls, dctx+95940, src, srcSize)
+	libc.Xmemcpy(tls, dctx+95940, src, srcSize)
 	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).Fexpected = (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FheaderSize - srcSize
 	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).Fstage = int32(ZSTDds_decodeFrameHeader)
 	return uint64(0)
 _2:
 	;
-	libc.X__builtin_memcpy(tls, dctx+95940+uintptr((*ZSTD_DCtx)(unsafe.Pointer(dctx)).FheaderSize-srcSize), src, srcSize)
+	libc.Xmemcpy(tls, dctx+95940+uintptr((*ZSTD_DCtx)(unsafe.Pointer(dctx)).FheaderSize-srcSize), src, srcSize)
 	err_code = ZSTD_decodeFrameHeader(tls, dctx, dctx+95940, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FheaderSize)
 	if ERR_isError(tls, err_code) != 0 {
 		if 0 != 0 {
@@ -39402,8 +39408,8 @@ _6:
 	return uint64(0)
 _7:
 	;
-	libc.X__builtin_memcpy(tls, dctx+95940+uintptr(libc.Uint64FromInt32(ZSTD_SKIPPABLEHEADERSIZE)-srcSize), src, srcSize) /* complete skippable header */
-	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).Fexpected = uint64(MEM_readLE32(tls, dctx+95940+uintptr(ZSTD_FRAMEIDSIZE)))        /* note : dctx->expected can grow seriously large, beyond local buffer size */
+	libc.Xmemcpy(tls, dctx+95940+uintptr(libc.Uint64FromInt32(ZSTD_SKIPPABLEHEADERSIZE)-srcSize), src, srcSize)    /* complete skippable header */
+	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).Fexpected = uint64(MEM_readLE32(tls, dctx+95940+uintptr(ZSTD_FRAMEIDSIZE))) /* note : dctx->expected can grow seriously large, beyond local buffer size */
 	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).Fstage = int32(ZSTDds_skipFrame)
 	return uint64(0)
 _8:
@@ -39619,7 +39625,7 @@ func ZSTD_decompressBegin(tls *libc.TLS, dctx uintptr) (r size_t) {
 	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).FbType = int32(bt_reserved)
 	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).FisFrameDecompression = int32(1)
 	_ = libc.Uint64FromInt64(1)
-	libc.X__builtin_memcpy(tls, dctx+32+26652, uintptr(unsafe.Pointer(&repStartValue)), libc.Uint64FromInt64(12)) /* initial repcodes */
+	libc.Xmemcpy(tls, dctx+32+26652, uintptr(unsafe.Pointer(&repStartValue)), libc.Uint64FromInt64(12)) /* initial repcodes */
 	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).FLLTptr = dctx + 32
 	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).FMLTptr = dctx + 32 + 6160
 	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).FOFTptr = dctx + 32 + 4104
@@ -40483,7 +40489,7 @@ func ZSTD_decompressStream(tls *libc.TLS, zds uintptr, output uintptr, input uin
 			remainingInput = libc.Uint64FromInt64(int64(iend) - int64(ip))
 			if toLoad > remainingInput { /* not enough input to load full header */
 				if remainingInput > uint64(0) {
-					libc.X__builtin_memcpy(tls, zds+95940+uintptr((*ZSTD_DStream)(unsafe.Pointer(zds)).FlhSize), ip, remainingInput)
+					libc.Xmemcpy(tls, zds+95940+uintptr((*ZSTD_DStream)(unsafe.Pointer(zds)).FlhSize), ip, remainingInput)
 					*(*size_t)(unsafe.Pointer(zds + 30304)) += remainingInput
 				}
 				(*ZSTD_inBuffer)(unsafe.Pointer(input)).Fpos = (*ZSTD_inBuffer)(unsafe.Pointer(input)).Fsize
@@ -40513,7 +40519,7 @@ func ZSTD_decompressStream(tls *libc.TLS, zds uintptr, output uintptr, input uin
 				}
 				return v18 - (*ZSTD_DStream)(unsafe.Pointer(zds)).FlhSize + ZSTD_blockHeaderSize /* remaining header bytes + next block header */
 			}
-			libc.X__builtin_memcpy(tls, zds+95940+uintptr((*ZSTD_DStream)(unsafe.Pointer(zds)).FlhSize), ip, toLoad)
+			libc.Xmemcpy(tls, zds+95940+uintptr((*ZSTD_DStream)(unsafe.Pointer(zds)).FlhSize), ip, toLoad)
 			(*ZSTD_DStream)(unsafe.Pointer(zds)).FlhSize = hSize
 			ip = ip + uintptr(toLoad)
 			goto _11
@@ -40846,7 +40852,7 @@ func ZSTD_decompressStream_simpleArgs(tls *libc.TLS, dctx uintptr, dst uintptr, 
 //	*  Memory operations
 //	**********************************************************/
 func ZSTD_copy4(tls *libc.TLS, dst uintptr, src uintptr) {
-	libc.X__builtin_memcpy(tls, dst, src, libc.Uint64FromInt32(libc.Int32FromInt32(4)))
+	libc.Xmemcpy(tls, dst, src, libc.Uint64FromInt32(libc.Int32FromInt32(4)))
 }
 
 /*-*************************************************************
@@ -41118,8 +41124,8 @@ _2:
 		}
 	}
 	if (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBufferLocation == int32(ZSTD_split) {
-		libc.X__builtin_memcpy(tls, dctx+30372, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBufferEnd-uintptr(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)), libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
-		libc.Xmemmove(tls, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer+uintptr(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16))-uintptr(WILDCOPY_OVERLENGTH), (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer, litSize-libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
+		libc.Xmemcpy(tls, dctx+30372, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBufferEnd-uintptr(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)), libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
+		libc.Xmemmove(tls, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer+uintptr(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16))-libc.UintptrFromInt32(WILDCOPY_OVERLENGTH), (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer, litSize-libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
 		*(*uintptr)(unsafe.Pointer(dctx + 30352)) += uintptr(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16) - libc.Int32FromInt32(WILDCOPY_OVERLENGTH))
 		*(*uintptr)(unsafe.Pointer(dctx + 30360)) -= uintptr(WILDCOPY_OVERLENGTH)
 	}
@@ -41194,10 +41200,10 @@ _3:
 			return libc.Uint64FromInt32(-int32(ZSTD_error_corruption_detected))
 		}
 		if (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBufferLocation == int32(ZSTD_split) {
-			libc.X__builtin_memcpy(tls, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer, istart+uintptr(lhSize1), litSize1-libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
-			libc.X__builtin_memcpy(tls, dctx+30372, istart+uintptr(lhSize1)+uintptr(litSize1)-uintptr(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)), libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
+			libc.Xmemcpy(tls, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer, istart+uintptr(lhSize1), litSize1-libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
+			libc.Xmemcpy(tls, dctx+30372, istart+uintptr(lhSize1)+uintptr(litSize1)-uintptr(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)), libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
 		} else {
-			libc.X__builtin_memcpy(tls, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer, istart+uintptr(lhSize1), litSize1)
+			libc.Xmemcpy(tls, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer, istart+uintptr(lhSize1), litSize1)
 		}
 		(*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitPtr = (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer
 		(*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitSize = litSize1
@@ -41266,10 +41272,10 @@ _4:
 	}
 	ZSTD_allocateLiteralsBuffer(tls, dctx, dst, dstCapacity, litSize2, streaming, expectedWriteSize2, uint32(1))
 	if (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBufferLocation == int32(ZSTD_split) {
-		libc.X__builtin_memset(tls, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer, libc.Int32FromUint8(*(*BYTE)(unsafe.Pointer(istart + uintptr(lhSize2)))), litSize2-libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
-		libc.X__builtin_memset(tls, dctx+30372, libc.Int32FromUint8(*(*BYTE)(unsafe.Pointer(istart + uintptr(lhSize2)))), libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
+		libc.Xmemset(tls, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer, libc.Int32FromUint8(*(*BYTE)(unsafe.Pointer(istart + uintptr(lhSize2)))), litSize2-libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
+		libc.Xmemset(tls, dctx+30372, libc.Int32FromUint8(*(*BYTE)(unsafe.Pointer(istart + uintptr(lhSize2)))), libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(16)))
 	} else {
-		libc.X__builtin_memset(tls, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer, libc.Int32FromUint8(*(*BYTE)(unsafe.Pointer(istart + uintptr(lhSize2)))), litSize2)
+		libc.Xmemset(tls, (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer, libc.Int32FromUint8(*(*BYTE)(unsafe.Pointer(istart + uintptr(lhSize2)))), litSize2)
 	}
 	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitPtr = (*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitBuffer
 	(*ZSTD_DCtx)(unsafe.Pointer(dctx)).FlitSize = litSize2
@@ -42161,7 +42167,7 @@ func ZSTD_buildFSETable_body(tls *libc.TLS, dt uintptr, normalizedCounter uintpt
 		;
 		s = s + 1
 	}
-	libc.X__builtin_memcpy(tls, dt, bp, libc.Uint64FromInt64(8))
+	libc.Xmemcpy(tls, dt, bp, libc.Uint64FromInt64(8))
 	/* Spread symbols */
 	/* Specialized symbol spreading for the case when there are
 	 * no low probability (-1 count) symbols. When compressing
@@ -43321,7 +43327,7 @@ func ZSTD_decompressSequences_bodySplitLitBuffer(tls *libc.TLS, dctx uintptr, ds
 		return libc.Uint64FromInt32(-int32(ZSTD_error_dstSize_tooSmall))
 	}
 	if op != libc.UintptrFromInt32(0) {
-		libc.X__builtin_memcpy(tls, op, *(*uintptr)(unsafe.Pointer(bp)), lastLLSize1)
+		libc.Xmemcpy(tls, op, *(*uintptr)(unsafe.Pointer(bp)), lastLLSize1)
 		op = op + uintptr(lastLLSize1)
 	}
 	return libc.Uint64FromInt64(int64(op) - int64(ostart))
@@ -43419,7 +43425,7 @@ func ZSTD_decompressSequences_body(tls *libc.TLS, dctx uintptr, dst uintptr, max
 		return libc.Uint64FromInt32(-int32(ZSTD_error_dstSize_tooSmall))
 	}
 	if op != libc.UintptrFromInt32(0) {
-		libc.X__builtin_memcpy(tls, op, *(*uintptr)(unsafe.Pointer(bp)), lastLLSize)
+		libc.Xmemcpy(tls, op, *(*uintptr)(unsafe.Pointer(bp)), lastLLSize)
 		op = op + uintptr(lastLLSize)
 	}
 	return libc.Uint64FromInt64(int64(op) - int64(ostart))
@@ -46628,7 +46634,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 				ss_insertionsort(tls, T, PA, first, last, depth)
 			}
 			if v2 = 0 <= ssize; !v2 {
-				libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(48675), uintptr(unsafe.Pointer(&__func__)))
+				libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(48858), uintptr(unsafe.Pointer(&__func__)))
 			}
 			_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 			if ssize == 0 {
@@ -46675,7 +46681,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 			if (int64(a)-int64(first))/4 <= (int64(last)-int64(a))/4 {
 				if int64(1) < (int64(a)-int64(first))/4 {
 					if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-						libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48694), uintptr(unsafe.Pointer(&__func__)))
+						libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48877), uintptr(unsafe.Pointer(&__func__)))
 					}
 					_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					stack[ssize].Fa = a
@@ -46694,7 +46700,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 			} else {
 				if int64(1) < (int64(last)-int64(a))/4 {
 					if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-						libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48701), uintptr(unsafe.Pointer(&__func__)))
+						libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48884), uintptr(unsafe.Pointer(&__func__)))
 					}
 					_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					stack[ssize].Fa = first
@@ -46901,7 +46907,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 			if (int64(a)-int64(first))/4 <= (int64(last)-int64(c))/4 {
 				if (int64(last)-int64(c))/4 <= (int64(c)-int64(b))/4 {
 					if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-						libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48751), uintptr(unsafe.Pointer(&__func__)))
+						libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48934), uintptr(unsafe.Pointer(&__func__)))
 					}
 					_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					stack[ssize].Fa = b
@@ -46911,7 +46917,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 					ssize = ssize + 1
 					stack[v3].Fd = ss_ilg(tls, int32((int64(c)-int64(b))/4))
 					if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-						libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48752), uintptr(unsafe.Pointer(&__func__)))
+						libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48935), uintptr(unsafe.Pointer(&__func__)))
 					}
 					_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					stack[ssize].Fa = c
@@ -46924,7 +46930,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 				} else {
 					if (int64(a)-int64(first))/4 <= (int64(c)-int64(b))/4 {
 						if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48755), uintptr(unsafe.Pointer(&__func__)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48938), uintptr(unsafe.Pointer(&__func__)))
 						}
 						_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = c
@@ -46934,7 +46940,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 						ssize = ssize + 1
 						stack[v3].Fd = limit
 						if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48756), uintptr(unsafe.Pointer(&__func__)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48939), uintptr(unsafe.Pointer(&__func__)))
 						}
 						_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = b
@@ -46946,7 +46952,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 						last = a
 					} else {
 						if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48759), uintptr(unsafe.Pointer(&__func__)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48942), uintptr(unsafe.Pointer(&__func__)))
 						}
 						_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = c
@@ -46956,7 +46962,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 						ssize = ssize + 1
 						stack[v3].Fd = limit
 						if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48760), uintptr(unsafe.Pointer(&__func__)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48943), uintptr(unsafe.Pointer(&__func__)))
 						}
 						_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = first
@@ -46974,7 +46980,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 			} else {
 				if (int64(a)-int64(first))/4 <= (int64(c)-int64(b))/4 {
 					if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-						libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48765), uintptr(unsafe.Pointer(&__func__)))
+						libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48948), uintptr(unsafe.Pointer(&__func__)))
 					}
 					_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					stack[ssize].Fa = b
@@ -46984,7 +46990,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 					ssize = ssize + 1
 					stack[v3].Fd = ss_ilg(tls, int32((int64(c)-int64(b))/4))
 					if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-						libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48766), uintptr(unsafe.Pointer(&__func__)))
+						libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48949), uintptr(unsafe.Pointer(&__func__)))
 					}
 					_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					stack[ssize].Fa = first
@@ -46997,7 +47003,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 				} else {
 					if (int64(last)-int64(c))/4 <= (int64(c)-int64(b))/4 {
 						if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48769), uintptr(unsafe.Pointer(&__func__)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48952), uintptr(unsafe.Pointer(&__func__)))
 						}
 						_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = first
@@ -47007,7 +47013,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 						ssize = ssize + 1
 						stack[v3].Fd = limit
 						if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48770), uintptr(unsafe.Pointer(&__func__)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48953), uintptr(unsafe.Pointer(&__func__)))
 						}
 						_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = b
@@ -47019,7 +47025,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 						first = c
 					} else {
 						if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48773), uintptr(unsafe.Pointer(&__func__)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48956), uintptr(unsafe.Pointer(&__func__)))
 						}
 						_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = first
@@ -47029,7 +47035,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 						ssize = ssize + 1
 						stack[v3].Fd = limit
 						if v2 = ssize < int32(SS_MISORT_STACKSIZE); !v2 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(48774), uintptr(unsafe.Pointer(&__func__)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(48957), uintptr(unsafe.Pointer(&__func__)))
 						}
 						_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = c
@@ -47524,7 +47530,7 @@ func ss_swapmerge(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, middle ui
 				*(*int32)(unsafe.Pointer(last)) = ^*(*int32)(unsafe.Pointer(last))
 			}
 			if v3 = 0 <= ssize; !v3 {
-				libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49028), uintptr(unsafe.Pointer(&__func__1)))
+				libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49211), uintptr(unsafe.Pointer(&__func__1)))
 			}
 			_ = v3 || libc.Bool(libc.Int32FromInt32(0) != 0)
 			if ssize == 0 {
@@ -47565,7 +47571,7 @@ func ss_swapmerge(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, middle ui
 				*(*int32)(unsafe.Pointer(last)) = ^*(*int32)(unsafe.Pointer(last))
 			}
 			if v3 = 0 <= ssize; !v3 {
-				libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49037), uintptr(unsafe.Pointer(&__func__1)))
+				libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49220), uintptr(unsafe.Pointer(&__func__1)))
 			}
 			_ = v3 || libc.Bool(libc.Int32FromInt32(0) != 0)
 			if ssize == 0 {
@@ -47652,7 +47658,7 @@ func ss_swapmerge(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, middle ui
 			}
 			if (int64(l)-int64(first))/4 <= (int64(last)-int64(r))/4 {
 				if v3 = ssize < int32(SS_SMERGE_STACKSIZE); !v3 {
-					libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49067), uintptr(unsafe.Pointer(&__func__1)))
+					libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49250), uintptr(unsafe.Pointer(&__func__1)))
 				}
 				_ = v3 || libc.Bool(libc.Int32FromInt32(0) != 0)
 				stack[ssize].Fa = r
@@ -47669,7 +47675,7 @@ func ss_swapmerge(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, middle ui
 					next = next ^ int32(6)
 				}
 				if v3 = ssize < int32(SS_SMERGE_STACKSIZE); !v3 {
-					libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49071), uintptr(unsafe.Pointer(&__func__1)))
+					libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49254), uintptr(unsafe.Pointer(&__func__1)))
 				}
 				_ = v3 || libc.Bool(libc.Int32FromInt32(0) != 0)
 				stack[ssize].Fa = first
@@ -47714,7 +47720,7 @@ func ss_swapmerge(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, middle ui
 				*(*int32)(unsafe.Pointer(last)) = ^*(*int32)(unsafe.Pointer(last))
 			}
 			if v3 = 0 <= ssize; !v3 {
-				libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49079), uintptr(unsafe.Pointer(&__func__1)))
+				libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49262), uintptr(unsafe.Pointer(&__func__1)))
 			}
 			_ = v3 || libc.Bool(libc.Int32FromInt32(0) != 0)
 			if ssize == 0 {
@@ -48489,7 +48495,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 				/* push */
 				if int64(1) < (int64(*(*uintptr)(unsafe.Pointer(bp + 8)))-int64(*(*uintptr)(unsafe.Pointer(bp))))/4 {
 					if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49461), uintptr(unsafe.Pointer(&__func__2)))
+						libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49644), uintptr(unsafe.Pointer(&__func__2)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					stack[ssize].Fa = libc.UintptrFromInt32(0)
@@ -48500,7 +48506,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 					ssize = ssize + 1
 					stack[v5].Fe = libc.Int32FromInt32(0)
 					if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49462), uintptr(unsafe.Pointer(&__func__2)))
+						libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49645), uintptr(unsafe.Pointer(&__func__2)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					stack[ssize].Fa = ISAd - uintptr(incr)*4
@@ -48515,7 +48521,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 				if (int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4 <= (int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp + 8))))/4 {
 					if int64(1) < (int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4 {
 						if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49467), uintptr(unsafe.Pointer(&__func__2)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49650), uintptr(unsafe.Pointer(&__func__2)))
 						}
 						_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = ISAd
@@ -48533,7 +48539,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 							limit = tr_ilg(tls, int32((int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp + 8))))/4))
 						} else {
 							if v4 = 0 <= ssize; !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49472), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49655), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							if ssize == 0 {
@@ -48551,7 +48557,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 				} else {
 					if int64(1) < (int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp + 8))))/4 {
 						if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49476), uintptr(unsafe.Pointer(&__func__2)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49659), uintptr(unsafe.Pointer(&__func__2)))
 						}
 						_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = ISAd
@@ -48569,7 +48575,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 							limit = tr_ilg(tls, int32((int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4))
 						} else {
 							if v4 = 0 <= ssize; !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49481), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49664), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							if ssize == 0 {
@@ -48602,7 +48608,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 						tr_partialcopy(tls, ISA, SA, first, *(*uintptr)(unsafe.Pointer(bp)), *(*uintptr)(unsafe.Pointer(bp + 8)), last, int32((int64(ISAd)-int64(ISA))/4))
 					}
 					if v4 = 0 <= ssize; !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49493), uintptr(unsafe.Pointer(&__func__2)))
+						libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49676), uintptr(unsafe.Pointer(&__func__2)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					if ssize == 0 {
@@ -48671,7 +48677,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 						if trbudget_check(tls, budget, int32((int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4)) != 0 {
 							if (int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4 <= (int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp))))/4 {
 								if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-									libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49509), uintptr(unsafe.Pointer(&__func__2)))
+									libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49692), uintptr(unsafe.Pointer(&__func__2)))
 								}
 								_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 								stack[ssize].Fa = ISAd
@@ -48687,7 +48693,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 							} else {
 								if int64(1) < (int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp))))/4 {
 									if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-										libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49513), uintptr(unsafe.Pointer(&__func__2)))
+										libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49696), uintptr(unsafe.Pointer(&__func__2)))
 									}
 									_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 									stack[ssize].Fa = ISAd + uintptr(incr)*4
@@ -48714,7 +48720,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 								limit = -libc.Int32FromInt32(3)
 							} else {
 								if v4 = 0 <= ssize; !v4 {
-									libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49524), uintptr(unsafe.Pointer(&__func__2)))
+									libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49707), uintptr(unsafe.Pointer(&__func__2)))
 								}
 								_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 								if ssize == 0 {
@@ -48731,7 +48737,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 						}
 					} else {
 						if v4 = 0 <= ssize; !v4 {
-							libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49528), uintptr(unsafe.Pointer(&__func__2)))
+							libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49711), uintptr(unsafe.Pointer(&__func__2)))
 						}
 						_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						if ssize == 0 {
@@ -48831,7 +48837,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 					if (int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp + 8))))/4 <= (int64(*(*uintptr)(unsafe.Pointer(bp + 8)))-int64(*(*uintptr)(unsafe.Pointer(bp))))/4 {
 						if int64(1) < (int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4 {
 							if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49568), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49751), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							stack[ssize].Fa = ISAd + uintptr(incr)*4
@@ -48842,7 +48848,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 							ssize = ssize + 1
 							stack[v5].Fe = trlink
 							if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49569), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49752), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							stack[ssize].Fa = ISAd
@@ -48856,7 +48862,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 						} else {
 							if int64(1) < (int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp + 8))))/4 {
 								if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-									libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49572), uintptr(unsafe.Pointer(&__func__2)))
+									libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49755), uintptr(unsafe.Pointer(&__func__2)))
 								}
 								_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 								stack[ssize].Fa = ISAd + uintptr(incr)*4
@@ -48878,7 +48884,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 						if (int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4 <= (int64(*(*uintptr)(unsafe.Pointer(bp + 8)))-int64(*(*uintptr)(unsafe.Pointer(bp))))/4 {
 							if int64(1) < (int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4 {
 								if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-									libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49579), uintptr(unsafe.Pointer(&__func__2)))
+									libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49762), uintptr(unsafe.Pointer(&__func__2)))
 								}
 								_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 								stack[ssize].Fa = ISAd
@@ -48889,7 +48895,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 								ssize = ssize + 1
 								stack[v5].Fe = trlink
 								if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-									libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49580), uintptr(unsafe.Pointer(&__func__2)))
+									libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49763), uintptr(unsafe.Pointer(&__func__2)))
 								}
 								_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 								stack[ssize].Fa = ISAd + uintptr(incr)*4
@@ -48902,7 +48908,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 								last = *(*uintptr)(unsafe.Pointer(bp))
 							} else {
 								if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-									libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49583), uintptr(unsafe.Pointer(&__func__2)))
+									libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49766), uintptr(unsafe.Pointer(&__func__2)))
 								}
 								_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 								stack[ssize].Fa = ISAd
@@ -48919,7 +48925,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 							}
 						} else {
 							if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49587), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49770), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							stack[ssize].Fa = ISAd
@@ -48930,7 +48936,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 							ssize = ssize + 1
 							stack[v5].Fe = trlink
 							if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49588), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49771), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							stack[ssize].Fa = ISAd
@@ -48950,7 +48956,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 					if (int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4 <= (int64(*(*uintptr)(unsafe.Pointer(bp + 8)))-int64(*(*uintptr)(unsafe.Pointer(bp))))/4 {
 						if int64(1) < (int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp + 8))))/4 {
 							if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49594), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49777), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							stack[ssize].Fa = ISAd + uintptr(incr)*4
@@ -48961,7 +48967,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 							ssize = ssize + 1
 							stack[v5].Fe = trlink
 							if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49595), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49778), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							stack[ssize].Fa = ISAd
@@ -48975,7 +48981,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 						} else {
 							if int64(1) < (int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4 {
 								if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-									libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49598), uintptr(unsafe.Pointer(&__func__2)))
+									libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49781), uintptr(unsafe.Pointer(&__func__2)))
 								}
 								_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 								stack[ssize].Fa = ISAd + uintptr(incr)*4
@@ -48997,7 +49003,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 						if (int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp + 8))))/4 <= (int64(*(*uintptr)(unsafe.Pointer(bp + 8)))-int64(*(*uintptr)(unsafe.Pointer(bp))))/4 {
 							if int64(1) < (int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp + 8))))/4 {
 								if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-									libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49605), uintptr(unsafe.Pointer(&__func__2)))
+									libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49788), uintptr(unsafe.Pointer(&__func__2)))
 								}
 								_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 								stack[ssize].Fa = ISAd
@@ -49008,7 +49014,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 								ssize = ssize + 1
 								stack[v5].Fe = trlink
 								if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-									libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49606), uintptr(unsafe.Pointer(&__func__2)))
+									libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49789), uintptr(unsafe.Pointer(&__func__2)))
 								}
 								_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 								stack[ssize].Fa = ISAd + uintptr(incr)*4
@@ -49021,7 +49027,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 								first = *(*uintptr)(unsafe.Pointer(bp + 8))
 							} else {
 								if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-									libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49609), uintptr(unsafe.Pointer(&__func__2)))
+									libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49792), uintptr(unsafe.Pointer(&__func__2)))
 								}
 								_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 								stack[ssize].Fa = ISAd
@@ -49038,7 +49044,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 							}
 						} else {
 							if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49613), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49796), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							stack[ssize].Fa = ISAd
@@ -49049,7 +49055,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 							ssize = ssize + 1
 							stack[v5].Fe = trlink
 							if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49614), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49797), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							stack[ssize].Fa = ISAd
@@ -49073,7 +49079,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 				if (int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4 <= (int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp + 8))))/4 {
 					if int64(1) < (int64(*(*uintptr)(unsafe.Pointer(bp)))-int64(first))/4 {
 						if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49622), uintptr(unsafe.Pointer(&__func__2)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49805), uintptr(unsafe.Pointer(&__func__2)))
 						}
 						_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = ISAd
@@ -49089,7 +49095,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 							first = *(*uintptr)(unsafe.Pointer(bp + 8))
 						} else {
 							if v4 = 0 <= ssize; !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49627), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49810), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							if ssize == 0 {
@@ -49107,7 +49113,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 				} else {
 					if int64(1) < (int64(last)-int64(*(*uintptr)(unsafe.Pointer(bp + 8))))/4 {
 						if v4 = ssize < int32(TR_STACKSIZE); !v4 {
-							libc.X__assert_fail(tls, __ccgo_ts+9638, __ccgo_ts+9627, int32(49631), uintptr(unsafe.Pointer(&__func__2)))
+							libc.X__assert_fail(tls, __ccgo_ts+9660, __ccgo_ts+9627, int32(49814), uintptr(unsafe.Pointer(&__func__2)))
 						}
 						_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 						stack[ssize].Fa = ISAd
@@ -49123,7 +49129,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 							last = *(*uintptr)(unsafe.Pointer(bp))
 						} else {
 							if v4 = 0 <= ssize; !v4 {
-								libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49636), uintptr(unsafe.Pointer(&__func__2)))
+								libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49819), uintptr(unsafe.Pointer(&__func__2)))
 							}
 							_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 							if ssize == 0 {
@@ -49149,7 +49155,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 					stack[trlink].Fd = -int32(1)
 				}
 				if v4 = 0 <= ssize; !v4 {
-					libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49645), uintptr(unsafe.Pointer(&__func__2)))
+					libc.X__assert_fail(tls, __ccgo_ts+9616, __ccgo_ts+9627, int32(49828), uintptr(unsafe.Pointer(&__func__2)))
 				}
 				_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 				if ssize == 0 {
@@ -49592,15 +49598,15 @@ func construct_SA(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucket
 				s = v3
 				if 0 < v3 {
 					if v4 = libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))) == c1; !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9657, __ccgo_ts+9627, int32(49887), uintptr(unsafe.Pointer(&__func__3)))
+						libc.X__assert_fail(tls, __ccgo_ts+9679, __ccgo_ts+9627, int32(50070), uintptr(unsafe.Pointer(&__func__3)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					if v4 = s+int32(1) < n && libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))) <= libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s+int32(1))))); !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9668, __ccgo_ts+9627, int32(49888), uintptr(unsafe.Pointer(&__func__3)))
+						libc.X__assert_fail(tls, __ccgo_ts+9690, __ccgo_ts+9627, int32(50071), uintptr(unsafe.Pointer(&__func__3)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					if v4 = libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s-int32(1))))) <= libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))); !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9704, __ccgo_ts+9627, int32(49889), uintptr(unsafe.Pointer(&__func__3)))
+						libc.X__assert_fail(tls, __ccgo_ts+9726, __ccgo_ts+9627, int32(50072), uintptr(unsafe.Pointer(&__func__3)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					*(*int32)(unsafe.Pointer(j)) = ^s
@@ -49619,11 +49625,11 @@ func construct_SA(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucket
 						k = SA + uintptr(*(*int32)(unsafe.Pointer(bucket_B + uintptr(c1<<int32(8)|v3)*4)))*4
 					}
 					if v4 = k < j; !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9721, __ccgo_ts+9627, int32(49897), uintptr(unsafe.Pointer(&__func__3)))
+						libc.X__assert_fail(tls, __ccgo_ts+9743, __ccgo_ts+9627, int32(50080), uintptr(unsafe.Pointer(&__func__3)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					if v4 = k != libc.UintptrFromInt32(0); !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9727, __ccgo_ts+9627, int32(49897), uintptr(unsafe.Pointer(&__func__3)))
+						libc.X__assert_fail(tls, __ccgo_ts+9749, __ccgo_ts+9627, int32(50080), uintptr(unsafe.Pointer(&__func__3)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					v11 = k
@@ -49631,7 +49637,7 @@ func construct_SA(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucket
 					*(*int32)(unsafe.Pointer(v11)) = s
 				} else {
 					if v4 = s == 0 && libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))) == c1 || s < 0; !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9737, __ccgo_ts+9627, int32(49900), uintptr(unsafe.Pointer(&__func__3)))
+						libc.X__assert_fail(tls, __ccgo_ts+9759, __ccgo_ts+9627, int32(50083), uintptr(unsafe.Pointer(&__func__3)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					*(*int32)(unsafe.Pointer(j)) = ^s
@@ -49671,7 +49677,7 @@ func construct_SA(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucket
 		s = v3
 		if 0 < v3 {
 			if v4 = libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s-int32(1))))) >= libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))); !v4 {
-				libc.X__assert_fail(tls, __ccgo_ts+9775, __ccgo_ts+9627, int32(49914), uintptr(unsafe.Pointer(&__func__3)))
+				libc.X__assert_fail(tls, __ccgo_ts+9797, __ccgo_ts+9627, int32(50097), uintptr(unsafe.Pointer(&__func__3)))
 			}
 			_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 			s = s - 1
@@ -49687,7 +49693,7 @@ func construct_SA(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucket
 				k = SA + uintptr(*(*int32)(unsafe.Pointer(bucket_A + uintptr(v3)*4)))*4
 			}
 			if v4 = i < k; !v4 {
-				libc.X__assert_fail(tls, __ccgo_ts+9792, __ccgo_ts+9627, int32(49921), uintptr(unsafe.Pointer(&__func__3)))
+				libc.X__assert_fail(tls, __ccgo_ts+9814, __ccgo_ts+9627, int32(50104), uintptr(unsafe.Pointer(&__func__3)))
 			}
 			_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 			v11 = k
@@ -49695,7 +49701,7 @@ func construct_SA(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucket
 			*(*int32)(unsafe.Pointer(v11)) = s
 		} else {
 			if v4 = s < 0; !v4 {
-				libc.X__assert_fail(tls, __ccgo_ts+9798, __ccgo_ts+9627, int32(49924), uintptr(unsafe.Pointer(&__func__3)))
+				libc.X__assert_fail(tls, __ccgo_ts+9820, __ccgo_ts+9627, int32(50107), uintptr(unsafe.Pointer(&__func__3)))
 			}
 			_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 			*(*int32)(unsafe.Pointer(i)) = ^s
@@ -49739,15 +49745,15 @@ func construct_BWT(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucke
 				s = v3
 				if 0 < v3 {
 					if v4 = libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))) == c1; !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9657, __ccgo_ts+9627, int32(49951), uintptr(unsafe.Pointer(&__func__4)))
+						libc.X__assert_fail(tls, __ccgo_ts+9679, __ccgo_ts+9627, int32(50134), uintptr(unsafe.Pointer(&__func__4)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					if v4 = s+int32(1) < n && libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))) <= libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s+int32(1))))); !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9668, __ccgo_ts+9627, int32(49952), uintptr(unsafe.Pointer(&__func__4)))
+						libc.X__assert_fail(tls, __ccgo_ts+9690, __ccgo_ts+9627, int32(50135), uintptr(unsafe.Pointer(&__func__4)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					if v4 = libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s-int32(1))))) <= libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))); !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9704, __ccgo_ts+9627, int32(49953), uintptr(unsafe.Pointer(&__func__4)))
+						libc.X__assert_fail(tls, __ccgo_ts+9726, __ccgo_ts+9627, int32(50136), uintptr(unsafe.Pointer(&__func__4)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					s = s - 1
@@ -49766,11 +49772,11 @@ func construct_BWT(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucke
 						k = SA + uintptr(*(*int32)(unsafe.Pointer(bucket_B + uintptr(c1<<int32(8)|v3)*4)))*4
 					}
 					if v4 = k < j; !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9721, __ccgo_ts+9627, int32(49961), uintptr(unsafe.Pointer(&__func__4)))
+						libc.X__assert_fail(tls, __ccgo_ts+9743, __ccgo_ts+9627, int32(50144), uintptr(unsafe.Pointer(&__func__4)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					if v4 = k != libc.UintptrFromInt32(0); !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9727, __ccgo_ts+9627, int32(49961), uintptr(unsafe.Pointer(&__func__4)))
+						libc.X__assert_fail(tls, __ccgo_ts+9749, __ccgo_ts+9627, int32(50144), uintptr(unsafe.Pointer(&__func__4)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					v11 = k
@@ -49781,7 +49787,7 @@ func construct_BWT(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucke
 						*(*int32)(unsafe.Pointer(j)) = ^s
 					} else {
 						if v4 = libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))) == c1; !v4 {
-							libc.X__assert_fail(tls, __ccgo_ts+9657, __ccgo_ts+9627, int32(49967), uintptr(unsafe.Pointer(&__func__4)))
+							libc.X__assert_fail(tls, __ccgo_ts+9679, __ccgo_ts+9627, int32(50150), uintptr(unsafe.Pointer(&__func__4)))
 						}
 						_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					}
@@ -49822,7 +49828,7 @@ func construct_BWT(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucke
 		s = v3
 		if 0 < v3 {
 			if v4 = libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s-int32(1))))) >= libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))); !v4 {
-				libc.X__assert_fail(tls, __ccgo_ts+9775, __ccgo_ts+9627, int32(49981), uintptr(unsafe.Pointer(&__func__4)))
+				libc.X__assert_fail(tls, __ccgo_ts+9797, __ccgo_ts+9627, int32(50164), uintptr(unsafe.Pointer(&__func__4)))
 			}
 			_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 			s = s - 1
@@ -49839,7 +49845,7 @@ func construct_BWT(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucke
 				k = SA + uintptr(*(*int32)(unsafe.Pointer(bucket_A + uintptr(v3)*4)))*4
 			}
 			if v4 = i < k; !v4 {
-				libc.X__assert_fail(tls, __ccgo_ts+9792, __ccgo_ts+9627, int32(49989), uintptr(unsafe.Pointer(&__func__4)))
+				libc.X__assert_fail(tls, __ccgo_ts+9814, __ccgo_ts+9627, int32(50172), uintptr(unsafe.Pointer(&__func__4)))
 			}
 			_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 			v11 = k
@@ -49900,15 +49906,15 @@ func construct_BWT_indexes(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintpt
 				s = v3
 				if 0 < v3 {
 					if v4 = libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))) == c1; !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9657, __ccgo_ts+9627, int32(50032), uintptr(unsafe.Pointer(&__func__5)))
+						libc.X__assert_fail(tls, __ccgo_ts+9679, __ccgo_ts+9627, int32(50215), uintptr(unsafe.Pointer(&__func__5)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					if v4 = s+int32(1) < n && libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))) <= libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s+int32(1))))); !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9668, __ccgo_ts+9627, int32(50033), uintptr(unsafe.Pointer(&__func__5)))
+						libc.X__assert_fail(tls, __ccgo_ts+9690, __ccgo_ts+9627, int32(50216), uintptr(unsafe.Pointer(&__func__5)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					if v4 = libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s-int32(1))))) <= libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))); !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9704, __ccgo_ts+9627, int32(50034), uintptr(unsafe.Pointer(&__func__5)))
+						libc.X__assert_fail(tls, __ccgo_ts+9726, __ccgo_ts+9627, int32(50217), uintptr(unsafe.Pointer(&__func__5)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					if s&mod == 0 {
@@ -49930,11 +49936,11 @@ func construct_BWT_indexes(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintpt
 						k = SA + uintptr(*(*int32)(unsafe.Pointer(bucket_B + uintptr(c1<<int32(8)|v3)*4)))*4
 					}
 					if v4 = k < j; !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9721, __ccgo_ts+9627, int32(50045), uintptr(unsafe.Pointer(&__func__5)))
+						libc.X__assert_fail(tls, __ccgo_ts+9743, __ccgo_ts+9627, int32(50228), uintptr(unsafe.Pointer(&__func__5)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					if v4 = k != libc.UintptrFromInt32(0); !v4 {
-						libc.X__assert_fail(tls, __ccgo_ts+9727, __ccgo_ts+9627, int32(50045), uintptr(unsafe.Pointer(&__func__5)))
+						libc.X__assert_fail(tls, __ccgo_ts+9749, __ccgo_ts+9627, int32(50228), uintptr(unsafe.Pointer(&__func__5)))
 					}
 					_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					v11 = k
@@ -49945,7 +49951,7 @@ func construct_BWT_indexes(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintpt
 						*(*int32)(unsafe.Pointer(j)) = ^s
 					} else {
 						if v4 = libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))) == c1; !v4 {
-							libc.X__assert_fail(tls, __ccgo_ts+9657, __ccgo_ts+9627, int32(50051), uintptr(unsafe.Pointer(&__func__5)))
+							libc.X__assert_fail(tls, __ccgo_ts+9679, __ccgo_ts+9627, int32(50234), uintptr(unsafe.Pointer(&__func__5)))
 						}
 						_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 					}
@@ -49990,7 +49996,7 @@ func construct_BWT_indexes(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintpt
 		s = v3
 		if 0 < v3 {
 			if v4 = libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s-int32(1))))) >= libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s)))); !v4 {
-				libc.X__assert_fail(tls, __ccgo_ts+9775, __ccgo_ts+9627, int32(50072), uintptr(unsafe.Pointer(&__func__5)))
+				libc.X__assert_fail(tls, __ccgo_ts+9797, __ccgo_ts+9627, int32(50255), uintptr(unsafe.Pointer(&__func__5)))
 			}
 			_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 			if s&mod == 0 {
@@ -50007,7 +50013,7 @@ func construct_BWT_indexes(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintpt
 				k = SA + uintptr(*(*int32)(unsafe.Pointer(bucket_A + uintptr(v3)*4)))*4
 			}
 			if v4 = i < k; !v4 {
-				libc.X__assert_fail(tls, __ccgo_ts+9792, __ccgo_ts+9627, int32(50082), uintptr(unsafe.Pointer(&__func__5)))
+				libc.X__assert_fail(tls, __ccgo_ts+9814, __ccgo_ts+9627, int32(50265), uintptr(unsafe.Pointer(&__func__5)))
 			}
 			_ = v4 || libc.Bool(libc.Int32FromInt32(0) != 0)
 			if 0 < s && libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(T + uintptr(s-int32(1))))) < c0 {
@@ -50431,11 +50437,11 @@ func FASTCOVER_computeFrequency(tls *libc.TLS, freqs uintptr, ctx uintptr) {
 	}
 	readLength = v1
 	if v2 = (*FASTCOVER_ctx_t)(unsafe.Pointer(ctx)).FnbTrainSamples >= uint64(5); !v2 {
-		libc.X__assert_fail(tls, __ccgo_ts+9804, __ccgo_ts+9627, int32(50463), uintptr(unsafe.Pointer(&__func__6)))
+		libc.X__assert_fail(tls, __ccgo_ts+9826, __ccgo_ts+9627, int32(50646), uintptr(unsafe.Pointer(&__func__6)))
 	}
 	_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 	if v2 = (*FASTCOVER_ctx_t)(unsafe.Pointer(ctx)).FnbTrainSamples <= (*FASTCOVER_ctx_t)(unsafe.Pointer(ctx)).FnbSamples; !v2 {
-		libc.X__assert_fail(tls, __ccgo_ts+9829, __ccgo_ts+9627, int32(50464), uintptr(unsafe.Pointer(&__func__6)))
+		libc.X__assert_fail(tls, __ccgo_ts+9851, __ccgo_ts+9627, int32(50647), uintptr(unsafe.Pointer(&__func__6)))
 	}
 	_ = v2 || libc.Bool(libc.Int32FromInt32(0) != 0)
 	i = uint64(0)
@@ -50521,7 +50527,7 @@ func FASTCOVER_ctx_init(tls *libc.TLS, ctx uintptr, samplesBuffer uintptr, sampl
 	/* Check if there are at least 5 training samples */
 	if nbTrainSamples < uint32(5) {
 		if g_displayLevel >= int32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+9867, libc.VaList(bp+8, nbTrainSamples))
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+9889, libc.VaList(bp+8, nbTrainSamples))
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_srcSize_wrong))
@@ -50529,7 +50535,7 @@ func FASTCOVER_ctx_init(tls *libc.TLS, ctx uintptr, samplesBuffer uintptr, sampl
 	/* Check if there's testing sample */
 	if nbTestSamples < uint32(1) {
 		if g_displayLevel >= int32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+9922, libc.VaList(bp+8, nbTestSamples))
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+9944, libc.VaList(bp+8, nbTestSamples))
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_srcSize_wrong))
@@ -50562,7 +50568,7 @@ func FASTCOVER_ctx_init(tls *libc.TLS, ctx uintptr, samplesBuffer uintptr, sampl
 	(*FASTCOVER_ctx_t)(unsafe.Pointer(ctx)).Foffsets = libc.Xcalloc(tls, uint64(nbSamples+libc.Uint32FromInt32(1)), uint64(8))
 	if (*FASTCOVER_ctx_t)(unsafe.Pointer(ctx)).Foffsets == libc.UintptrFromInt32(0) {
 		if g_displayLevel >= int32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+9977, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+9999, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		FASTCOVER_ctx_destroy(tls, ctx)
@@ -50571,7 +50577,7 @@ func FASTCOVER_ctx_init(tls *libc.TLS, ctx uintptr, samplesBuffer uintptr, sampl
 	/* Fill offsets from the samplesSizes */
 	*(*size_t)(unsafe.Pointer((*FASTCOVER_ctx_t)(unsafe.Pointer(ctx)).Foffsets)) = uint64(0)
 	if v7 = nbSamples >= uint32(5); !v7 {
-		libc.X__assert_fail(tls, __ccgo_ts+10014, __ccgo_ts+9627, int32(50547), uintptr(unsafe.Pointer(&__func__7)))
+		libc.X__assert_fail(tls, __ccgo_ts+10036, __ccgo_ts+9627, int32(50730), uintptr(unsafe.Pointer(&__func__7)))
 	}
 	_ = v7 || libc.Bool(libc.Int32FromInt32(0) != 0)
 	i = uint32(1)
@@ -50589,7 +50595,7 @@ func FASTCOVER_ctx_init(tls *libc.TLS, ctx uintptr, samplesBuffer uintptr, sampl
 	(*FASTCOVER_ctx_t)(unsafe.Pointer(ctx)).Ffreqs = libc.Xcalloc(tls, libc.Uint64FromInt32(1)<<f, uint64(4))
 	if (*FASTCOVER_ctx_t)(unsafe.Pointer(ctx)).Ffreqs == libc.UintptrFromInt32(0) {
 		if g_displayLevel >= int32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10029, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10051, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		FASTCOVER_ctx_destroy(tls, ctx)
@@ -50819,14 +50825,14 @@ func ZDICT_trainFromBuffer_fastCover(tls *libc.TLS, dictBuffer uintptr, dictBuff
 	/* Checks */
 	if !(FASTCOVER_checkParameters(tls, *(*ZDICT_cover_params_t)(unsafe.Pointer(bp + 80)), dictBufferCapacity, parameters.Ff, parameters.Faccel) != 0) {
 		if g_displayLevel >= int32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10066, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10088, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_parameter_outOfBound))
 	}
 	if nbSamples == uint32(0) {
 		if g_displayLevel >= int32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10098, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10120, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_srcSize_wrong))
@@ -50951,28 +50957,28 @@ func ZDICT_optimizeTrainFromBuffer_fastCover(tls *libc.TLS, dictBuffer uintptr, 
 	/* Checks */
 	if splitPoint <= libc.Float64FromInt32(0) || splitPoint > libc.Float64FromInt32(1) {
 		if displayLevel >= int32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10143, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10165, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_parameter_outOfBound))
 	}
 	if accel == uint32(0) || accel > uint32(FASTCOVER_MAX_ACCEL) {
 		if displayLevel >= int32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10165, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10187, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_parameter_outOfBound))
 	}
 	if kMinK < kMaxD || kMaxK < kMinK {
 		if displayLevel >= int32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10182, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10204, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_parameter_outOfBound))
 	}
 	if nbSamples == uint32(0) {
 		if displayLevel >= int32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10098, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10120, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		return libc.Uint64FromInt32(-int32(ZSTD_error_srcSize_wrong))
@@ -51065,7 +51071,7 @@ func ZDICT_optimizeTrainFromBuffer_fastCover(tls *libc.TLS, dictBuffer uintptr, 
 			/* Check the parameters */
 			if !(FASTCOVER_checkParameters(tls, (*FASTCOVER_tryParameters_data_t)(unsafe.Pointer(data)).Fparameters, dictBufferCapacity, (*FASTCOVER_ctx_t)(unsafe.Pointer((*FASTCOVER_tryParameters_data_t)(unsafe.Pointer(data)).Fctx)).Ff, accel) != 0) {
 				if g_displayLevel >= int32(1) {
-					libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10066, 0)
+					libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10088, 0)
 					libc.Xfflush(tls, libc.Xstderr)
 				}
 				libc.Xfree(tls, data)
@@ -51185,7 +51191,7 @@ func ZDICT_printHex(tls *libc.TLS, ptr uintptr, length size_t) {
 		if libc.Int32FromUint8(c) < int32(32) || libc.Int32FromUint8(c) > int32(126) {
 			c = uint8('.')
 		} /* non-printable char */
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10195, libc.VaList(bp+8, libc.Int32FromUint8(c)))
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10217, libc.VaList(bp+8, libc.Int32FromUint8(c)))
 		libc.Xfflush(tls, libc.Xstderr)
 		goto _1
 	_1:
@@ -51356,15 +51362,15 @@ func ZDICT_analyzePos(tls *libc.TLS, doneMarks uintptr, suffix uintptr, start U3
 	refinedStart = start
 	refinedEnd = end
 	if notificationLevel >= uint32(4) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10198, 0)
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10220, 0)
 		libc.Xfflush(tls, libc.Xstderr)
 	}
 	if notificationLevel >= uint32(4) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10200, libc.VaList(bp+536, end-start, int32(MINMATCHLENGTH), uint32(pos)))
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10222, libc.VaList(bp+536, end-start, int32(MINMATCHLENGTH), uint32(pos)))
 		libc.Xfflush(tls, libc.Xstderr)
 	}
 	if notificationLevel >= uint32(4) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10198, 0)
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10220, 0)
 		libc.Xfflush(tls, libc.Xstderr)
 	}
 	mml = uint32(MINMATCHLENGTH)
@@ -51486,7 +51492,7 @@ func ZDICT_analyzePos(tls *libc.TLS, doneMarks uintptr, suffix uintptr, start U3
 		i = i + 1
 	}
 	if notificationLevel >= uint32(4) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10247, libc.VaList(bp+536, uint32(pos), uint32(maxLength), savings[maxLength], float64(savings[maxLength])/float64(maxLength)))
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10269, libc.VaList(bp+536, uint32(pos), uint32(maxLength), savings[maxLength], float64(savings[maxLength])/float64(maxLength)))
 		libc.Xfflush(tls, libc.Xstderr)
 	}
 	(*(*dictItem)(unsafe.Pointer(bp + 512))).Fpos = uint32(pos)
@@ -51738,7 +51744,7 @@ func ZDICT_trainBuffer_legacy(tls *libc.TLS, dictList uintptr, dictListSize U32,
 	refreshRate = libc.Int64FromInt64(1000000) * libc.Int64FromInt32(3) / libc.Int64FromInt32(10)
 	/* init */
 	if notificationLevel >= uint32(2) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10318, libc.VaList(bp+8, __ccgo_ts+1319))
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10340, libc.VaList(bp+8, __ccgo_ts+1319))
 		libc.Xfflush(tls, libc.Xstderr)
 	} /* clean display line */
 	if !(suffix0 != 0) || !(reverseSuffix != 0) || !(doneMarks != 0) || !(filePos != 0) {
@@ -51752,7 +51758,7 @@ func ZDICT_trainBuffer_legacy(tls *libc.TLS, dictList uintptr, dictListSize U32,
 	/* limit sample set size (divsufsort limitation)*/
 	if bufferSize > uint64(libc.Uint32FromUint32(2000)<<libc.Int32FromInt32(20)) {
 		if notificationLevel >= uint32(3) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10325, libc.VaList(bp+8, libc.Uint32FromUint32(2000)<<libc.Int32FromInt32(20)>>libc.Int32FromInt32(20)))
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10347, libc.VaList(bp+8, libc.Uint32FromUint32(2000)<<libc.Int32FromInt32(20)>>libc.Int32FromInt32(20)))
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 	}
@@ -51763,7 +51769,7 @@ func ZDICT_trainBuffer_legacy(tls *libc.TLS, dictList uintptr, dictListSize U32,
 	}
 	/* sort */
 	if notificationLevel >= uint32(2) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10370, libc.VaList(bp+8, nbFiles, uint32(bufferSize>>libc.Int32FromInt32(20))))
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10392, libc.VaList(bp+8, nbFiles, uint32(bufferSize>>libc.Int32FromInt32(20))))
 		libc.Xfflush(tls, libc.Xstderr)
 	}
 	divSuftSortResult = divsufsort(tls, buffer, suffix, libc.Int32FromUint64(bufferSize), 0)
@@ -51800,11 +51806,11 @@ func ZDICT_trainBuffer_legacy(tls *libc.TLS, dictList uintptr, dictListSize U32,
 		pos = pos + 1
 	}
 	if notificationLevel >= uint32(2) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10412, 0)
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10434, 0)
 		libc.Xfflush(tls, libc.Xstderr)
 	}
 	if notificationLevel >= uint32(3) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10435, libc.VaList(bp+8, minRatio))
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10457, libc.VaList(bp+8, minRatio))
 		libc.Xfflush(tls, libc.Xstderr)
 	}
 	cursor = uint32(0)
@@ -51826,7 +51832,7 @@ func ZDICT_trainBuffer_legacy(tls *libc.TLS, dictList uintptr, dictListSize U32,
 		if notificationLevel >= uint32(2) {
 			if ZDICT_clockSpan(tls, displayClock) > refreshRate {
 				displayClock = libc.Xclock(tls)
-				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10456, libc.VaList(bp+8, float64(float64(cursor)/float64(bufferSize)*float64(100))))
+				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10478, libc.VaList(bp+8, float64(float64(cursor)/float64(bufferSize)*float64(100))))
 				libc.Xfflush(tls, libc.Xstderr)
 			}
 			if notificationLevel >= uint32(4) {
@@ -51894,7 +51900,7 @@ func ZDICT_countEStats(tls *libc.TLS, esr EStats_ress_t, params uintptr, countLi
 	errorCode = ZSTD_compressBegin_usingCDict_deprecated(tls, esr.Fzc, esr.Fdict)
 	if ZSTD_isError(tls, errorCode) != 0 {
 		if notificationLevel >= uint32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10468, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10490, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		return
@@ -51902,7 +51908,7 @@ func ZDICT_countEStats(tls *libc.TLS, esr EStats_ress_t, params uintptr, countLi
 	cSize = ZSTD_compressBlock_deprecated(tls, esr.Fzc, esr.FworkPlace, libc.Uint64FromInt32(libc.Int32FromInt32(1)<<libc.Int32FromInt32(ZSTD_BLOCKSIZELOG_MAX)), src, srcSize)
 	if ZSTD_isError(tls, cSize) != 0 {
 		if notificationLevel >= uint32(3) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10517, libc.VaList(bp+8, uint32(srcSize)))
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10539, libc.VaList(bp+8, uint32(srcSize)))
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		return
@@ -52147,7 +52153,7 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 	if !(esr.Fdict != 0) || !(esr.Fzc != 0) || !(esr.FworkPlace != 0) {
 		eSize = libc.Uint64FromInt32(-int32(ZSTD_error_memory_allocation))
 		if notificationLevel >= uint32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10563, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10585, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		goto _cleanup
@@ -52168,7 +52174,7 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 	if notificationLevel >= uint32(4) {
 		/* writeStats */
 		if notificationLevel >= uint32(4) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10583, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10605, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		u = uint32(0)
@@ -52177,7 +52183,7 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 				break
 			}
 			if notificationLevel >= uint32(4) {
-				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10611, libc.VaList(bp+12848, u, (*(*[31]uint32)(unsafe.Pointer(bp + 3080)))[u]))
+				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10633, libc.VaList(bp+12848, u, (*(*[31]uint32)(unsafe.Pointer(bp + 3080)))[u]))
 				libc.Xfflush(tls, libc.Xstderr)
 			}
 			goto _8
@@ -52191,20 +52197,20 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 	if ERR_isError(tls, maxNbBits) != 0 {
 		eSize = maxNbBits
 		if notificationLevel >= uint32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10622, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10644, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		goto _cleanup
 	}
 	if maxNbBits == uint64(8) { /* not compressible : will fail on HUF_writeCTable() */
 		if notificationLevel >= uint32(2) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10647, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10669, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		ZDICT_flatLit(tls, bp) /* replace distribution by a fake "mostly flat but still compressible" distribution, that HUF_writeCTable() can encode */
 		maxNbBits = HUF_buildCTable_wksp(tls, bp+1024, bp, uint32(255), huffLog, bp+7972, uint64(4864))
 		if v9 = maxNbBits == uint64(9); !v9 {
-			libc.X__assert_fail(tls, __ccgo_ts+10747, __ccgo_ts+9627, int32(51675), uintptr(unsafe.Pointer(&__func__8)))
+			libc.X__assert_fail(tls, __ccgo_ts+10769, __ccgo_ts+9627, int32(51858), uintptr(unsafe.Pointer(&__func__8)))
 		}
 		_ = v9 || libc.Bool(libc.Int32FromInt32(0) != 0)
 	}
@@ -52238,7 +52244,7 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 	if ERR_isError(tls, errorCode) != 0 {
 		eSize = errorCode
 		if notificationLevel >= uint32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10760, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10782, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		goto _cleanup
@@ -52260,7 +52266,7 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 	if ERR_isError(tls, errorCode) != 0 {
 		eSize = errorCode
 		if notificationLevel >= uint32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10805, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10827, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		goto _cleanup
@@ -52282,7 +52288,7 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 	if ERR_isError(tls, errorCode) != 0 {
 		eSize = errorCode
 		if notificationLevel >= uint32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10854, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10876, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		goto _cleanup
@@ -52293,7 +52299,7 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 	if ERR_isError(tls, hhSize) != 0 {
 		eSize = hhSize
 		if notificationLevel >= uint32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10901, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10923, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		goto _cleanup
@@ -52305,7 +52311,7 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 	if ERR_isError(tls, ohSize) != 0 {
 		eSize = ohSize
 		if notificationLevel >= uint32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10925, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10947, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		goto _cleanup
@@ -52317,7 +52323,7 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 	if ERR_isError(tls, mhSize) != 0 {
 		eSize = mhSize
 		if notificationLevel >= uint32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10968, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10990, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		goto _cleanup
@@ -52329,7 +52335,7 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 	if ERR_isError(tls, lhSize) != 0 {
 		eSize = lhSize
 		if notificationLevel >= uint32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11015, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11037, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		goto _cleanup
@@ -52340,7 +52346,7 @@ func ZDICT_analyzeEntropy(tls *libc.TLS, dstBuffer uintptr, maxDstSize size_t, c
 	if maxDstSize < uint64(12) {
 		eSize = libc.Uint64FromInt32(-int32(ZSTD_error_dstSize_tooSmall))
 		if notificationLevel >= uint32(1) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11060, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11082, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		goto _cleanup
@@ -52434,11 +52440,11 @@ func ZDICT_finalizeDictionary(tls *libc.TLS, dictBuffer uintptr, dictBufferCapac
 	hSize = uint64(8)
 	/* entropy tables */
 	if notificationLevel >= uint32(2) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10318, libc.VaList(bp+264, __ccgo_ts+1319))
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10340, libc.VaList(bp+264, __ccgo_ts+1319))
 		libc.Xfflush(tls, libc.Xstderr)
 	} /* clean display line */
 	if notificationLevel >= uint32(2) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11099, 0)
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11121, 0)
 		libc.Xfflush(tls, libc.Xstderr)
 	}
 	eSize = ZDICT_analyzeEntropy(tls, bp+uintptr(hSize), uint64(HBUFFSIZE)-hSize, compressionLevel, samplesBuffer, samplesSizes, nbSamples, customDictContent, dictContentSize, notificationLevel)
@@ -52454,7 +52460,7 @@ func ZDICT_finalizeDictionary(tls *libc.TLS, dictBuffer uintptr, dictBufferCapac
 	if dictContentSize < minContentSize {
 		if hSize+minContentSize > dictBufferCapacity {
 			if 0 != 0 {
-				_force_has_format_string(tls, __ccgo_ts+11116, 0)
+				_force_has_format_string(tls, __ccgo_ts+11138, 0)
 			}
 			return libc.Uint64FromInt32(-int32(ZSTD_error_dstSize_tooSmall))
 		}
@@ -52471,11 +52477,11 @@ func ZDICT_finalizeDictionary(tls *libc.TLS, dictBuffer uintptr, dictBufferCapac
 	outDictPadding = outDictHeader + uintptr(hSize)
 	outDictContent = outDictPadding + uintptr(paddingSize)
 	if v3 = dictSize <= dictBufferCapacity; !v3 {
-		libc.X__assert_fail(tls, __ccgo_ts+11164, __ccgo_ts+9627, int32(51863), uintptr(unsafe.Pointer(&__func__9)))
+		libc.X__assert_fail(tls, __ccgo_ts+11186, __ccgo_ts+9627, int32(52046), uintptr(unsafe.Pointer(&__func__9)))
 	}
 	_ = v3 || libc.Bool(libc.Int32FromInt32(0) != 0)
 	if v3 = outDictContent+uintptr(dictContentSize) == dictBuffer+uintptr(dictSize); !v3 {
-		libc.X__assert_fail(tls, __ccgo_ts+11195, __ccgo_ts+9627, int32(51864), uintptr(unsafe.Pointer(&__func__9)))
+		libc.X__assert_fail(tls, __ccgo_ts+11217, __ccgo_ts+9627, int32(52047), uintptr(unsafe.Pointer(&__func__9)))
 	}
 	_ = v3 || libc.Bool(libc.Int32FromInt32(0) != 0)
 	/* First copy the customDictContent into its final location.
@@ -52512,11 +52518,11 @@ func ZDICT_addEntropyTablesFromBuffer_advanced(tls *libc.TLS, dictBuffer uintptr
 	hSize = uint64(8)
 	/* calculate entropy tables */
 	if notificationLevel >= uint32(2) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10318, libc.VaList(bp+8, __ccgo_ts+1319))
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+10340, libc.VaList(bp+8, __ccgo_ts+1319))
 		libc.Xfflush(tls, libc.Xstderr)
 	} /* clean display line */
 	if notificationLevel >= uint32(2) {
-		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11099, 0)
+		libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11121, 0)
 		libc.Xfflush(tls, libc.Xstderr)
 	}
 	eSize = ZDICT_analyzeEntropy(tls, dictBuffer+uintptr(hSize), dictBufferCapacity-hSize, compressionLevel, samplesBuffer, samplesSizes, nbSamples, dictBuffer+uintptr(dictBufferCapacity)-uintptr(dictContentSize), dictContentSize, notificationLevel)
@@ -52619,11 +52625,11 @@ func ZDICT_trainFromBuffer_unsafe_legacy(tls *libc.TLS, dictBuffer uintptr, maxD
 		nb = v1
 		dictContentSize = ZDICT_dictSize(tls, dictList)
 		if notificationLevel >= uint32(3) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11260, libc.VaList(bp+8, (*(*dictItem)(unsafe.Pointer(dictList))).Fpos-uint32(1), dictContentSize))
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11282, libc.VaList(bp+8, (*(*dictItem)(unsafe.Pointer(dictList))).Fpos-uint32(1), dictContentSize))
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		if notificationLevel >= uint32(3) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11300, libc.VaList(bp+8, nb-uint32(1)))
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11322, libc.VaList(bp+8, nb-uint32(1)))
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		u = uint32(1)
@@ -52644,12 +52650,12 @@ func ZDICT_trainFromBuffer_unsafe_legacy(tls *libc.TLS, dictBuffer uintptr, maxD
 				return libc.Uint64FromInt32(-int32(ZSTD_error_GENERIC)) /* should never happen */
 			}
 			if notificationLevel >= uint32(3) {
-				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11324, libc.VaList(bp+8, u, length, pos, (*(*dictItem)(unsafe.Pointer(dictList + uintptr(u)*12))).Fsavings))
+				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11346, libc.VaList(bp+8, u, length, pos, (*(*dictItem)(unsafe.Pointer(dictList + uintptr(u)*12))).Fsavings))
 				libc.Xfflush(tls, libc.Xstderr)
 			}
 			ZDICT_printHex(tls, samplesBuffer+uintptr(pos), uint64(printedLength))
 			if notificationLevel >= uint32(3) {
-				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11370, 0)
+				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11392, 0)
 				libc.Xfflush(tls, libc.Xstderr)
 			}
 			goto _7
@@ -52666,22 +52672,22 @@ func ZDICT_trainFromBuffer_unsafe_legacy(tls *libc.TLS, dictBuffer uintptr, maxD
 	} /* dictionary content too small */
 	if uint64(dictContentSize1) < targetDictSize/uint64(4) {
 		if notificationLevel >= uint32(2) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11374, libc.VaList(bp+8, dictContentSize1, uint32(maxDictSize)))
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11396, libc.VaList(bp+8, dictContentSize1, uint32(maxDictSize)))
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		if samplesBuffSize < uint64(10)*targetDictSize {
 			if notificationLevel >= uint32(2) {
-				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11453, libc.VaList(bp+8, uint32(samplesBuffSize>>libc.Int32FromInt32(20))))
+				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11475, libc.VaList(bp+8, uint32(samplesBuffSize>>libc.Int32FromInt32(20))))
 				libc.Xfflush(tls, libc.Xstderr)
 			}
 		}
 		if minRep > uint32(MINRATIO) {
 			if notificationLevel >= uint32(2) {
-				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11520, libc.VaList(bp+8, selectivity+uint32(1)))
+				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11542, libc.VaList(bp+8, selectivity+uint32(1)))
 				libc.Xfflush(tls, libc.Xstderr)
 			}
 			if notificationLevel >= uint32(2) {
-				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11593, 0)
+				libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11615, 0)
 				libc.Xfflush(tls, libc.Xstderr)
 			}
 		}
@@ -52692,15 +52698,15 @@ func ZDICT_trainFromBuffer_unsafe_legacy(tls *libc.TLS, dictBuffer uintptr, maxD
 			proposedSelectivity = proposedSelectivity - 1
 		}
 		if notificationLevel >= uint32(2) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11684, libc.VaList(bp+8, dictContentSize1, uint32(maxDictSize)))
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11706, libc.VaList(bp+8, dictContentSize1, uint32(maxDictSize)))
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		if notificationLevel >= uint32(2) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11764, libc.VaList(bp+8, proposedSelectivity))
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11786, libc.VaList(bp+8, proposedSelectivity))
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 		if notificationLevel >= uint32(2) {
-			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11842, 0)
+			libc.Xfprintf(tls, libc.Xstderr, __ccgo_ts+11864, 0)
 			libc.Xfflush(tls, libc.Xstderr)
 		}
 	}
@@ -52912,4 +52918,4 @@ var g_debuglevel int32
 
 var __ccgo_ts = (*reflect.StringHeader)(unsafe.Pointer(&__ccgo_ts1)).Data
 
-var __ccgo_ts1 = "Unspecified error code\x00No error detected\x00Error (generic)\x00Unknown frame descriptor\x00Version not supported\x00Unsupported frame parameter\x00Frame requires too much memory for decoding\x00Data corruption detected\x00Restored data doesn't match checksum\x00Header of Literals' block doesn't respect format specification\x00Unsupported parameter\x00Unsupported combination of parameters\x00Parameter is out of bound\x00Context should be init first\x00Allocation error : not enough memory\x00workSpace buffer is not large enough\x00Operation not authorized at current processing stage\x00tableLog requires too much memory : unsupported\x00Unsupported max Symbol Value : too large\x00Specified maxSymbolValue is too small\x00This mode cannot generate an uncompressed block\x00pledged buffer stability condition is not respected\x00Dictionary is corrupted\x00Dictionary mismatch\x00Cannot create Dictionary from provided samples\x00Destination buffer is too small\x00Src size is incorrect\x00Operation on NULL destination buffer\x00Operation made no progress over multiple calls, due to output buffer being full\x00Operation made no progress over multiple calls, due to input being empty\x00Frame index is too large\x00An I/O error occurred when reading/seeking\x00Destination buffer is wrong\x00Source buffer is wrong\x00Block-level external sequence producer returned an error code\x00External sequences are not valid\x00\x001.5.7\x00table phase - alignment initial allocation failed!\x00NULL pointer!\x00dst buf too small for uncompressed block\x00 \x00not enough space for compression\x00not enough space\x00FSE_normalizeCount failed\x00FSE_writeNCount failed\x00FSE_buildCTable_wksp failed\x00impossible to reach\x00not enough space remaining\x00ZSTD_encodeSequences failed\x00ZSTD_compressSubBlock_literal failed\x00ZSTD_compressSubBlock_sequences failed\x00ZSTD_compressSubBlock failed\x00ZSTD_noCompressBlock failed\x00not compatible with static CCtx\x00can only set params in cctx init stage\x00MT not compatible with static alloc\x00unknown parameter\x00Param out of bounds\x00The context is in the wrong stage!\x00Can't override parameters with cdict attached (some must be inherited from the cdict).\x00Can't set pledgedSrcSize when not in init stage.\x00ZSTD_createCDict_advanced failed\x00Can't load a dictionary when cctx is not in init stage.\x00static CCtx can't allocate for an internal copy of dictionary\x00allocation failed for dictionary content\x00Can't ref a dict when ctx not in init stage.\x00Can't ref a pool when ctx not in init stage.\x00Can't ref a prefix when ctx not in init stage.\x00Reset parameters is only possible during init stage.\x00Estimate CCtx size is supported for single-threaded compression only.\x00failed a workspace allocation in ZSTD_reset_matchState\x00cctx size estimate failed!\x00static cctx : no resize\x00couldn't allocate prevCBlock\x00couldn't allocate nextCBlock\x00couldn't allocate tmpWorkspace\x00Can't copy a ctx that's not in init stage.\x00ZSTD_compressLiterals failed\x00Can't fit seq hdr in output buf!\x00ZSTD_buildSequencesStatistics failed!\x00ZSTD_entropyCompressSeqStore_internal failed\x00External sequence producer returned error code %lu\x00Got zero sequences from external sequence producer for a non-empty src buffer!\x00nbExternalSeqs == outSeqsCapacity but lastSeq is not a block delimiter!\x00Long-distance matching with external sequence producer enabled is not currently supported.\x00External sequences imply too large a block!\x00Failed to copy external sequences to seqStore!\x00Not enough space to copy sequences\x00targetCBlockSize != 0\x00nbWorkers != 0\x00ZSTD_compress2 failed\x00HIST_count_wksp failed\x00HUF_buildCTable_wksp\x00ZSTD_buildBlockEntropyStats_literals failed\x00ZSTD_buildBlockEntropyStats_sequences failed\x00Block header doesn't fit\x00ZSTD_entropyCompressSeqStore failed!\x00copyBlockSequences failed\x00Nocompress block failed\x00RLE compress block failed\x00Compressing single block from splitBlock_internal() failed!\x00Compressing chunk failed!\x00ZSTD_buildSeqStore failed\x00Uncompressible block\x00Splitting blocks failed!\x00ZSTD_compressSuperBlock failed\x00ZSTD_compressBlock_targetCBlockSize_body failed\x00not enough space to store compressed block\x00ZSTD_compressBlock_targetCBlockSize failed\x00ZSTD_compressBlock_splitBlock failed\x00ZSTD_compressBlock_internal failed\x00dst buf is too small to fit worst-case frame header size.\x00Not enough room for skippable frame\x00Src size too large for skippable frame\x00Skippable frame magic number variant not supported\x00dst buf is too small to write frame trailer empty block.\x00missing init (ZSTD_compressBegin)\x00ZSTD_writeFrameHeader failed\x00ZSTD_compress_frameChunk failed\x00%s\x00error : pledgedSrcSize = %u, while realSrcSize >= %u\x00input is larger than a block\x00ZSTD_loadCEntropy failed\x00ZSTD_compress_insertDictionary failed\x00init missing\x00no room for epilogue\x00no room for checksum\x00ZSTD_compressContinue_internal failed\x00ZSTD_writeEpilogue failed\x00error : pledgedSrcSize = %u, while realSrcSize = %u\x00call ZSTD_initCStream() first!\x00ZSTD_compressEnd failed\x00ZSTD_compressContinue failed\x00ZSTD_c_stableInBuffer enabled but input differs!\x00ZSTD_c_stableOutBuffer enabled but output size differs!\x00External sequence producer isn't supported with nbWorkers >= 1\x00invalid output buffer\x00invalid input buffer\x00invalid endDirective\x00stableInBuffer condition not respected: wrong src pointer\x00stableInBuffer condition not respected: externally modified pos\x00compressStream2 initialization failed\x00invalid buffers\x00ZSTDMT_compressStream_generic failed\x00ZSTD_compressStream2_simpleArgs failed\x00Offset too large!\x00Matchlength too small for the minMatch\x00Sequence validation failed\x00Not enough memory allocated. Try adjusting ZSTD_c_minMatch.\x00Block delimiter not found.\x00Blocksize doesn't agree with block delimiter!\x00delimiter format error : both matchlength and offset must be == 0\x00Reached end of sequences without finding a block delimiter\x00Error while determining block size with explicit delimiters\x00sequences incorrectly define a too large block\x00sequences define a frame longer than source\x00No room for empty frame block header\x00Error while trying to determine block size\x00Bad sequence copy\x00not enough dstCapacity to write a new compressed block\x00Compressing sequences of block failed\x00ZSTD_rleCompressBlock failed\x00CCtx initialization failed\x00Compressing blocks failed!\x00Requires at least 1 end-of-block\x00Error while trying to determine nb of sequences for a block\x00discrepancy: Sequences require more literals than present in buffer\x00Bad sequence conversion\x00ZSTD_compressSequencesAndLiterals cannot generate an uncompressed block\x00literals must be entirely and exactly consumed\x00Sequences must represent a total of exactly srcSize=%zu\x00literals buffer is not large enough: must be at least 8 bytes larger than litSize (risk of read out-of-bound)\x00This mode is only compatible with explicit delimiters\x00This mode is not compatible with Sequence validation\x00this mode is not compatible with frame checksum\x00ZSTD_compressStream2(,,ZSTD_e_end) failed\x00Failed to init fast loop args\x00corruption\x00Failed to init asm args\x00Hash set is full!\x00Expanded hashset allocation failed!\x00not compatible with static DCtx\x00invalid parameter : src==NULL, but srcSize>0\x00first bytes don't correspond to any supported magic number\x00reserved bits, must be zero\x00headerSize too small\x00invalid block type\x00Block decompression failure\x00invalid skippable frame\x00At least one frame successfully completed, but following bytes are garbage: it's more likely to be a srcSize error, specifying more input bytes than size of frame(s). Note: one could be unlucky, it might be a corruption error instead, happening right at the place where we expect zstd magic bytes. But this is _much_ less likely than a srcSize field error.\x00input not entirely consumed\x00not allowed\x00Block Size Exceeds Maximum\x00ZSTD_copyRawBlock failed\x00Decompressed Block Size Exceeds Maximum\x00dict is too small\x00Failed to allocate memory for hash set!\x00Static dctx does not support multiple DDicts!\x00ZSTD_d_stableOutBuffer enabled but output differs!\x00forbidden. in: pos: %u   vs size: %u\x00forbidden. out: pos: %u   vs size: %u\x00First few bytes detected incorrect\x00ZSTD_obm_stable passed but ZSTD_outBuffer is too small\x00should never happen\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need up to 5 for case 3\x00NULL not handled\x00Not enough literals (%zu) for the 4-streams mode (min %u)\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize = 3\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize+1 = 3\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize+1 = 4\x00impossible\x00extraneous data present in the Sequences section\x00ZSTD_buildSeqTable failed\x00last match must fit within dstBuffer\x00try to read beyond literal buffer\x00output should not catch up to and overwrite literal buffer\x00remaining lit must fit within dstBuffer\x00invalid dst\x00Total samples size is too large (%u MB), maximum size is %u MB\n\x00Total number of training samples is %u and is invalid.\x00Total number of testing samples is %u and is invalid.\x00Training on %u samples of total size %u\n\x00Testing on %u samples of total size %u\n\x00Failed to allocate scratch buffers\n\x00Constructing partial suffix array\n\x00Computing frequencies\n\x00WARNING: The maximum dictionary size %u is too large compared to the source size %u! size(source)/size(dictionary) = %f, but it should be >= 10! This may lead to a subpar dictionary! We recommend training on sources at least 10x, and preferably 100x the size of the dictionary! \n\x00Breaking content into %u epochs of size %u\n\x00\r%u%%       \x00\r%79s\r\x00Cover parameters incorrect\n\x00Cover must have at least one input file\n\x00dictBufferCapacity must be at least %u\n\x00Failed to allocate dmer map: out of memory\n\x00Building dictionary\n\x00Constructed dictionary of size %u\n\x00Failed to allocate buffers: out of memory\n\x00Failed to select dictionary\n\x00Incorrect parameters\n\x00Trying %u different sets of parameters\n\x00d=%u\n\x00Failed to initialize context\n\x00k=%u\n\x00Failed to allocate parameters\n\x000 <= ssize\x00tmp/zstd.c\x00ssize < STACK_SIZE\x00T[s] == c1\x00((s + 1) < n) && (T[s] <= T[s + 1])\x00T[s - 1] <= T[s]\x00k < j\x00k != NULL\x00((s == 0) && (T[s] == c1)) || (s < 0)\x00T[s - 1] >= T[s]\x00i < k\x00s < 0\x00ctx->nbTrainSamples >= 5\x00ctx->nbTrainSamples <= ctx->nbSamples\x00Total number of training samples is %u and is invalid\n\x00Total number of testing samples is %u and is invalid.\n\x00Failed to allocate scratch buffers \n\x00nbSamples >= 5\x00Failed to allocate frequency table \n\x00FASTCOVER parameters incorrect\n\x00FASTCOVER must have at least one input file\n\x00Incorrect splitPoint\n\x00Incorrect accel\n\x00Incorrect k\n\x00%c\x00\n\x00found %3u matches of length >= %i at pos %7u  \x00Selected dict at position %u, of length %u : saves %u (ratio: %.2f)  \n\x00\r%70s\r\x00sample set too large : reduced to %u MB ...\n\x00sorting %u files of total size %u MB ...\n\x00finding patterns ... \n\x00minimum ratio : %u \n\x00\r%4.2f %% \r\x00warning : ZSTD_compressBegin_usingCDict failed \n\x00warning : could not compress sample size %u \n\x00Not enough memory \n\x00Offset Code Frequencies : \n\x00%2u :%7u \n\x00 HUF_buildCTable error \n\x00warning : pathological dataset : literals are not compressible : samples are noisy or too regular \n\x00maxNbBits==9\x00FSE_normalizeCount error with offcodeCount \n\x00FSE_normalizeCount error with matchLengthCount \n\x00FSE_normalizeCount error with litLengthCount \n\x00HUF_writeCTable error \n\x00FSE_writeNCount error with offcodeNCount \n\x00FSE_writeNCount error with matchLengthNCount \n\x00FSE_writeNCount error with litlengthNCount \n\x00not enough space to write RepOffsets \n\x00statistics ... \n\x00dictBufferCapacity too small to fit max repcode\x00dictSize <= dictBufferCapacity\x00outDictContent + dictContentSize == (BYTE*)dictBuffer + dictSize\x00\n %u segments found, of total size %u \n\x00list %u best segments \n\x00%3u:%3u bytes at pos %8u, savings %7u bytes |\x00| \n\x00!  warning : selected content significantly smaller than requested (%u < %u) \n\x00!  consider increasing the number of samples (total size : %u MB)\n\x00!  consider increasing selectivity to produce larger dictionary (-s%u) \n\x00!  note : larger dictionaries are not necessarily better, test its efficiency on samples \n\x00!  note : calculated dictionary significantly larger than requested (%u > %u) \n\x00!  consider increasing dictionary size, or produce denser dictionary (-s%u) \n\x00!  always test dictionary efficiency on real samples \n\x00"
+var __ccgo_ts1 = "Unspecified error code\x00No error detected\x00Error (generic)\x00Unknown frame descriptor\x00Version not supported\x00Unsupported frame parameter\x00Frame requires too much memory for decoding\x00Data corruption detected\x00Restored data doesn't match checksum\x00Header of Literals' block doesn't respect format specification\x00Unsupported parameter\x00Unsupported combination of parameters\x00Parameter is out of bound\x00Context should be init first\x00Allocation error : not enough memory\x00workSpace buffer is not large enough\x00Operation not authorized at current processing stage\x00tableLog requires too much memory : unsupported\x00Unsupported max Symbol Value : too large\x00Specified maxSymbolValue is too small\x00This mode cannot generate an uncompressed block\x00pledged buffer stability condition is not respected\x00Dictionary is corrupted\x00Dictionary mismatch\x00Cannot create Dictionary from provided samples\x00Destination buffer is too small\x00Src size is incorrect\x00Operation on NULL destination buffer\x00Operation made no progress over multiple calls, due to output buffer being full\x00Operation made no progress over multiple calls, due to input being empty\x00Frame index is too large\x00An I/O error occurred when reading/seeking\x00Destination buffer is wrong\x00Source buffer is wrong\x00Block-level external sequence producer returned an error code\x00External sequences are not valid\x00\x001.5.7\x00table phase - alignment initial allocation failed!\x00NULL pointer!\x00dst buf too small for uncompressed block\x00 \x00not enough space for compression\x00not enough space\x00FSE_normalizeCount failed\x00FSE_writeNCount failed\x00FSE_buildCTable_wksp failed\x00impossible to reach\x00not enough space remaining\x00ZSTD_encodeSequences failed\x00ZSTD_compressSubBlock_literal failed\x00ZSTD_compressSubBlock_sequences failed\x00ZSTD_compressSubBlock failed\x00ZSTD_noCompressBlock failed\x00not compatible with static CCtx\x00can only set params in cctx init stage\x00MT not compatible with static alloc\x00unknown parameter\x00Param out of bounds\x00The context is in the wrong stage!\x00Can't override parameters with cdict attached (some must be inherited from the cdict).\x00Can't set pledgedSrcSize when not in init stage.\x00ZSTD_createCDict_advanced failed\x00Can't load a dictionary when cctx is not in init stage.\x00static CCtx can't allocate for an internal copy of dictionary\x00allocation failed for dictionary content\x00Can't ref a dict when ctx not in init stage.\x00Can't ref a pool when ctx not in init stage.\x00Can't ref a prefix when ctx not in init stage.\x00Reset parameters is only possible during init stage.\x00Estimate CCtx size is supported for single-threaded compression only.\x00failed a workspace allocation in ZSTD_reset_matchState\x00cctx size estimate failed!\x00static cctx : no resize\x00couldn't allocate prevCBlock\x00couldn't allocate nextCBlock\x00couldn't allocate tmpWorkspace\x00Can't copy a ctx that's not in init stage.\x00ZSTD_compressLiterals failed\x00Can't fit seq hdr in output buf!\x00ZSTD_buildSequencesStatistics failed!\x00ZSTD_entropyCompressSeqStore_internal failed\x00External sequence producer returned error code %lu\x00Got zero sequences from external sequence producer for a non-empty src buffer!\x00nbExternalSeqs == outSeqsCapacity but lastSeq is not a block delimiter!\x00Long-distance matching with external sequence producer enabled is not currently supported.\x00External sequences imply too large a block!\x00Failed to copy external sequences to seqStore!\x00Not enough space to copy sequences\x00targetCBlockSize != 0\x00nbWorkers != 0\x00ZSTD_compress2 failed\x00HIST_count_wksp failed\x00HUF_buildCTable_wksp\x00ZSTD_buildBlockEntropyStats_literals failed\x00ZSTD_buildBlockEntropyStats_sequences failed\x00Block header doesn't fit\x00ZSTD_entropyCompressSeqStore failed!\x00copyBlockSequences failed\x00Nocompress block failed\x00RLE compress block failed\x00Compressing single block from splitBlock_internal() failed!\x00Compressing chunk failed!\x00ZSTD_buildSeqStore failed\x00Uncompressible block\x00Splitting blocks failed!\x00ZSTD_compressSuperBlock failed\x00ZSTD_compressBlock_targetCBlockSize_body failed\x00not enough space to store compressed block\x00ZSTD_compressBlock_targetCBlockSize failed\x00ZSTD_compressBlock_splitBlock failed\x00ZSTD_compressBlock_internal failed\x00dst buf is too small to fit worst-case frame header size.\x00Not enough room for skippable frame\x00Src size too large for skippable frame\x00Skippable frame magic number variant not supported\x00dst buf is too small to write frame trailer empty block.\x00missing init (ZSTD_compressBegin)\x00ZSTD_writeFrameHeader failed\x00ZSTD_compress_frameChunk failed\x00%s\x00error : pledgedSrcSize = %u, while realSrcSize >= %u\x00input is larger than a block\x00ZSTD_loadCEntropy failed\x00ZSTD_compress_insertDictionary failed\x00init missing\x00no room for epilogue\x00no room for checksum\x00ZSTD_compressContinue_internal failed\x00ZSTD_writeEpilogue failed\x00error : pledgedSrcSize = %u, while realSrcSize = %u\x00call ZSTD_initCStream() first!\x00ZSTD_compressEnd failed\x00ZSTD_compressContinue failed\x00ZSTD_c_stableInBuffer enabled but input differs!\x00ZSTD_c_stableOutBuffer enabled but output size differs!\x00External sequence producer isn't supported with nbWorkers >= 1\x00invalid output buffer\x00invalid input buffer\x00invalid endDirective\x00stableInBuffer condition not respected: wrong src pointer\x00stableInBuffer condition not respected: externally modified pos\x00compressStream2 initialization failed\x00invalid buffers\x00ZSTDMT_compressStream_generic failed\x00ZSTD_compressStream2_simpleArgs failed\x00Offset too large!\x00Matchlength too small for the minMatch\x00Sequence validation failed\x00Not enough memory allocated. Try adjusting ZSTD_c_minMatch.\x00Block delimiter not found.\x00Blocksize doesn't agree with block delimiter!\x00delimiter format error : both matchlength and offset must be == 0\x00Reached end of sequences without finding a block delimiter\x00Error while determining block size with explicit delimiters\x00sequences incorrectly define a too large block\x00sequences define a frame longer than source\x00No room for empty frame block header\x00Error while trying to determine block size\x00Bad sequence copy\x00not enough dstCapacity to write a new compressed block\x00Compressing sequences of block failed\x00ZSTD_rleCompressBlock failed\x00CCtx initialization failed\x00Compressing blocks failed!\x00Requires at least 1 end-of-block\x00Error while trying to determine nb of sequences for a block\x00discrepancy: Sequences require more literals than present in buffer\x00Bad sequence conversion\x00ZSTD_compressSequencesAndLiterals cannot generate an uncompressed block\x00literals must be entirely and exactly consumed\x00Sequences must represent a total of exactly srcSize=%zu\x00literals buffer is not large enough: must be at least 8 bytes larger than litSize (risk of read out-of-bound)\x00This mode is only compatible with explicit delimiters\x00This mode is not compatible with Sequence validation\x00this mode is not compatible with frame checksum\x00ZSTD_compressStream2(,,ZSTD_e_end) failed\x00Failed to init fast loop args\x00corruption\x00Failed to init asm args\x00Hash set is full!\x00Expanded hashset allocation failed!\x00not compatible with static DCtx\x00invalid parameter : src==NULL, but srcSize>0\x00first bytes don't correspond to any supported magic number\x00reserved bits, must be zero\x00headerSize too small\x00invalid block type\x00Block decompression failure\x00invalid skippable frame\x00At least one frame successfully completed, but following bytes are garbage: it's more likely to be a srcSize error, specifying more input bytes than size of frame(s). Note: one could be unlucky, it might be a corruption error instead, happening right at the place where we expect zstd magic bytes. But this is _much_ less likely than a srcSize field error.\x00input not entirely consumed\x00not allowed\x00Block Size Exceeds Maximum\x00ZSTD_copyRawBlock failed\x00Decompressed Block Size Exceeds Maximum\x00dict is too small\x00Failed to allocate memory for hash set!\x00Static dctx does not support multiple DDicts!\x00ZSTD_d_stableOutBuffer enabled but output differs!\x00forbidden. in: pos: %u   vs size: %u\x00forbidden. out: pos: %u   vs size: %u\x00First few bytes detected incorrect\x00ZSTD_obm_stable passed but ZSTD_outBuffer is too small\x00should never happen\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need up to 5 for case 3\x00NULL not handled\x00Not enough literals (%zu) for the 4-streams mode (min %u)\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize = 3\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize+1 = 3\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize+1 = 4\x00impossible\x00extraneous data present in the Sequences section\x00ZSTD_buildSeqTable failed\x00last match must fit within dstBuffer\x00try to read beyond literal buffer\x00output should not catch up to and overwrite literal buffer\x00remaining lit must fit within dstBuffer\x00invalid dst\x00Total samples size is too large (%u MB), maximum size is %u MB\n\x00Total number of training samples is %u and is invalid.\x00Total number of testing samples is %u and is invalid.\x00Training on %u samples of total size %u\n\x00Testing on %u samples of total size %u\n\x00Failed to allocate scratch buffers\n\x00Constructing partial suffix array\n\x00Computing frequencies\n\x00WARNING: The maximum dictionary size %u is too large compared to the source size %u! size(source)/size(dictionary) = %f, but it should be >= 10! This may lead to a subpar dictionary! We recommend training on sources at least 10x, and preferably 100x the size of the dictionary! \n\x00Breaking content into %u epochs of size %u\n\x00\r%u%%       \x00\r%79s\r\x00Cover parameters incorrect\n\x00Cover must have at least one input file\n\x00dictBufferCapacity must be at least %u\n\x00Failed to allocate dmer map: out of memory\n\x00Building dictionary\n\x00Constructed dictionary of size %u\n\x00Failed to allocate buffers: out of memory\n\x00Failed to select dictionary\n\x00Incorrect parameters\n\x00Trying %u different sets of parameters\n\x00d=%u\n\x00Failed to initialize context\n\x00k=%u\n\x00Failed to allocate parameters\n\x000 <= ssize\x00/tmp/zstd-build-658442599/zstd.c\x00ssize < STACK_SIZE\x00T[s] == c1\x00((s + 1) < n) && (T[s] <= T[s + 1])\x00T[s - 1] <= T[s]\x00k < j\x00k != NULL\x00((s == 0) && (T[s] == c1)) || (s < 0)\x00T[s - 1] >= T[s]\x00i < k\x00s < 0\x00ctx->nbTrainSamples >= 5\x00ctx->nbTrainSamples <= ctx->nbSamples\x00Total number of training samples is %u and is invalid\n\x00Total number of testing samples is %u and is invalid.\n\x00Failed to allocate scratch buffers \n\x00nbSamples >= 5\x00Failed to allocate frequency table \n\x00FASTCOVER parameters incorrect\n\x00FASTCOVER must have at least one input file\n\x00Incorrect splitPoint\n\x00Incorrect accel\n\x00Incorrect k\n\x00%c\x00\n\x00found %3u matches of length >= %i at pos %7u  \x00Selected dict at position %u, of length %u : saves %u (ratio: %.2f)  \n\x00\r%70s\r\x00sample set too large : reduced to %u MB ...\n\x00sorting %u files of total size %u MB ...\n\x00finding patterns ... \n\x00minimum ratio : %u \n\x00\r%4.2f %% \r\x00warning : ZSTD_compressBegin_usingCDict failed \n\x00warning : could not compress sample size %u \n\x00Not enough memory \n\x00Offset Code Frequencies : \n\x00%2u :%7u \n\x00 HUF_buildCTable error \n\x00warning : pathological dataset : literals are not compressible : samples are noisy or too regular \n\x00maxNbBits==9\x00FSE_normalizeCount error with offcodeCount \n\x00FSE_normalizeCount error with matchLengthCount \n\x00FSE_normalizeCount error with litLengthCount \n\x00HUF_writeCTable error \n\x00FSE_writeNCount error with offcodeNCount \n\x00FSE_writeNCount error with matchLengthNCount \n\x00FSE_writeNCount error with litlengthNCount \n\x00not enough space to write RepOffsets \n\x00statistics ... \n\x00dictBufferCapacity too small to fit max repcode\x00dictSize <= dictBufferCapacity\x00outDictContent + dictContentSize == (BYTE*)dictBuffer + dictSize\x00\n %u segments found, of total size %u \n\x00list %u best segments \n\x00%3u:%3u bytes at pos %8u, savings %7u bytes |\x00| \n\x00!  warning : selected content significantly smaller than requested (%u < %u) \n\x00!  consider increasing the number of samples (total size : %u MB)\n\x00!  consider increasing selectivity to produce larger dictionary (-s%u) \n\x00!  note : larger dictionaries are not necessarily better, test its efficiency on samples \n\x00!  note : calculated dictionary significantly larger than requested (%u > %u) \n\x00!  consider increasing dictionary size, or produce denser dictionary (-s%u) \n\x00!  always test dictionary efficiency on real samples \n\x00"

@@ -12,7 +12,7 @@ import (
 
 var (
 	srcDir    = ""
-	patchPath = "libc/patches/0001-fix-ccgo-build.patch"
+	patchPath = "libc/patches/0001-fix-zstd-ccgo-build.patch"
 )
 
 func init() {
