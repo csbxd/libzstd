@@ -1,6 +1,6 @@
-// Code generated for linux/amd64 by 'ccgo --package-name libzstd -std=c17 /tmp/zstd-build-2714034871/zstd.c -o /home/bxd/GolandProjects/libzstd/zstd_linux_amd64.go', DO NOT EDIT.
+// Code generated for linux/arm64 by 'ccgo --package-name libzstd -std=c17 /tmp/zstd-build-3522643984/zstd.c -o /home/bxd/GolandProjects/libzstd/zstd_linux_arm64.go', DO NOT EDIT.
 
-//go:build linux && amd64
+//go:build linux && arm64
 
 package libzstd
 
@@ -210,8 +210,6 @@ const NZERO = 20
 const OFFCODE_MAX = 30
 const OF_DEFAULTNORMLOG = 5
 const OffFSELog = 8
-const PAGESIZE = 4096
-const PAGE_SIZE = "PAGESIZE"
 const PATH_MAX = 4096
 const PIPE_BUF = 4096
 const PTHREAD_CANCEL_ASYNCHRONOUS = 1
@@ -622,7 +620,7 @@ const __DEC64_MAX__ = "9.999999999999999E384"
 const __DEC64_MIN__ = 1e-383
 const __DEC64_SUBNORMAL_MIN__ = 0.000000000000001e-383
 const __DECIMAL_BID_FORMAT__ = 1
-const __DECIMAL_DIG__ = 17
+const __DECIMAL_DIG__ = 21
 const __DEC_EVAL_METHOD__ = 2
 const __ELF__ = 1
 const __FINITE_MATH_ONLY__ = 0
@@ -683,20 +681,20 @@ const __FLT32_MAX_EXP__ = 128
 const __FLT32_MAX__ = 3.40282346638528859811704183484516925e+38
 const __FLT32_MIN__ = 1.17549435082228750796873653722224568e-38
 const __FLT32_NORM_MAX__ = 3.40282346638528859811704183484516925e+38
-const __FLT64X_DECIMAL_DIG__ = 36
-const __FLT64X_DENORM_MIN__ = 6.47517511943802511092443895822764655e-4966
-const __FLT64X_DIG__ = 33
-const __FLT64X_EPSILON__ = 1.92592994438723585305597794258492732e-34
+const __FLT64X_DECIMAL_DIG__ = 21
+const __FLT64X_DENORM_MIN__ = 3.64519953188247460252840593361941982e-4951
+const __FLT64X_DIG__ = 18
+const __FLT64X_EPSILON__ = 1.08420217248550443400745280086994171e-19
 const __FLT64X_HAS_DENORM__ = 1
 const __FLT64X_HAS_INFINITY__ = 1
 const __FLT64X_HAS_QUIET_NAN__ = 1
 const __FLT64X_IS_IEC_60559__ = 1
-const __FLT64X_MANT_DIG__ = 113
+const __FLT64X_MANT_DIG__ = 64
 const __FLT64X_MAX_10_EXP__ = 4932
 const __FLT64X_MAX_EXP__ = 16384
-const __FLT64X_MAX__ = "1.18973149535723176508575932662800702e+4932"
+const __FLT64X_MAX__ = "1.18973149535723176502126385303097021e+4932"
 const __FLT64X_MIN__ = 3.36210314311209350626267781732175260e-4932
-const __FLT64X_NORM_MAX__ = "1.18973149535723176508575932662800702e+4932"
+const __FLT64X_NORM_MAX__ = "1.18973149535723176502126385303097021e+4932"
 const __FLT64_DECIMAL_DIG__ = 17
 const __FLT64_DENORM_MIN__ = 4.94065645841246544176568792868221372e-324
 const __FLT64_DIG__ = 15
@@ -787,22 +785,21 @@ const __INT_LEAST8_MAX__ = 0x7f
 const __INT_LEAST8_WIDTH__ = 8
 const __INT_MAX__ = 0x7fffffff
 const __INT_WIDTH__ = 32
-const __LDBL_DECIMAL_DIG__ = 17
-const __LDBL_DENORM_MIN__ = 4.94065645841246544176568792868221372e-324
-const __LDBL_DIG__ = 15
-const __LDBL_EPSILON__ = 2.22044604925031308084726333618164062e-16
+const __LDBL_DECIMAL_DIG__ = 21
+const __LDBL_DENORM_MIN__ = 3.64519953188247460252840593361941982e-4951
+const __LDBL_DIG__ = 18
+const __LDBL_EPSILON__ = 1.08420217248550443400745280086994171e-19
 const __LDBL_HAS_DENORM__ = 1
 const __LDBL_HAS_INFINITY__ = 1
 const __LDBL_HAS_QUIET_NAN__ = 1
 const __LDBL_IS_IEC_60559__ = 1
-const __LDBL_MANT_DIG__ = 53
-const __LDBL_MAX_10_EXP__ = 308
-const __LDBL_MAX_EXP__ = 1024
-const __LDBL_MAX__ = 1.79769313486231570814527423731704357e+308
-const __LDBL_MIN__ = 2.22507385850720138309023271733240406e-308
-const __LDBL_NORM_MAX__ = 1.79769313486231570814527423731704357e+308
+const __LDBL_MANT_DIG__ = 64
+const __LDBL_MAX_10_EXP__ = 4932
+const __LDBL_MAX_EXP__ = 16384
+const __LDBL_MAX__ = "1.18973149535723176502126385303097021e+4932"
+const __LDBL_MIN__ = 3.36210314311209350626267781732175260e-4932
+const __LDBL_NORM_MAX__ = "1.18973149535723176502126385303097021e+4932"
 const __LITTLE_ENDIAN = 1234
-const __LONG_DOUBLE_64__ = 1
 const __LONG_LONG_MAX__ = 0x7fffffffffffffff
 const __LONG_LONG_WIDTH__ = 64
 const __LONG_MAX = 0x7fffffffffffffff
@@ -920,7 +917,7 @@ type __predefined_wchar_t = int32
 
 type __predefined_ptrdiff_t = int64
 
-type wchar_t = int32
+type wchar_t = uint32
 
 type max_align_t = struct {
 	F__ll int64
@@ -2742,7 +2739,7 @@ func FSE_readNCount_body(tls *libc.TLS, normalizedCounter uintptr, maxSVPtr uint
 	var charnum, maxSV1, v2 uint32
 	var countSize size_t
 	var iend, ip, istart uintptr
-	var _ /* buffer at bp+0 */ [8]int8
+	var _ /* buffer at bp+0 */ [8]uint8
 	_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = bitCount, bitStream, charnum, count, countSize, iend, ip, istart, max, maxSV1, nbBits, previous0, remaining, repeats, threshold, v2
 	istart = headerBuffer
 	iend = istart + uintptr(hbSize)
@@ -2752,7 +2749,7 @@ func FSE_readNCount_body(tls *libc.TLS, normalizedCounter uintptr, maxSVPtr uint
 	previous0 = 0
 	if hbSize < uint64(8) {
 		/* This function only works when hbSize >= 8 */
-		*(*[8]int8)(unsafe.Pointer(bp)) = [8]int8{}
+		*(*[8]uint8)(unsafe.Pointer(bp)) = [8]uint8{}
 		libc.Xmemcpy(tls, bp, headerBuffer, hbSize)
 		countSize = FSE_readNCount(tls, normalizedCounter, maxSVPtr, tableLogPtr, bp, uint64(8))
 		if FSE_isError(tls, countSize) != 0 {
@@ -43991,7 +43988,7 @@ type __isoc_va_list = uintptr
 type fpos_t = struct {
 	F__lldata [0]int64
 	F__align  [0]float64
-	F__opaque [16]int8
+	F__opaque [16]uint8
 }
 
 type _G_fpos64_t = fpos_t
@@ -47064,7 +47061,7 @@ func ss_mintrosort(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, last uin
 	}
 }
 
-var __func__ = [14]int8{'s', 's', '_', 'm', 'i', 'n', 't', 'r', 'o', 's', 'o', 'r', 't'}
+var __func__ = [14]uint8{'s', 's', '_', 'm', 'i', 'n', 't', 'r', 'o', 's', 'o', 'r', 't'}
 
 /*---------------------------------------------------------------------------*/
 
@@ -47738,7 +47735,7 @@ func ss_swapmerge(tls *libc.TLS, T uintptr, PA uintptr, first uintptr, middle ui
 	}
 }
 
-var __func__1 = [13]int8{'s', 's', '_', 's', 'w', 'a', 'p', 'm', 'e', 'r', 'g', 'e'}
+var __func__1 = [13]uint8{'s', 's', '_', 's', 'w', 'a', 'p', 'm', 'e', 'r', 'g', 'e'}
 
 /*---------------------------------------------------------------------------*/
 
@@ -49175,7 +49172,7 @@ func tr_introsort(tls *libc.TLS, ISA uintptr, ISAd uintptr, SA uintptr, first ui
 	}
 }
 
-var __func__2 = [13]int8{'t', 'r', '_', 'i', 'n', 't', 'r', 'o', 's', 'o', 'r', 't'}
+var __func__2 = [13]uint8{'t', 'r', '_', 'i', 'n', 't', 'r', 'o', 's', 'o', 'r', 't'}
 
 /*---------------------------------------------------------------------------*/
 
@@ -49713,7 +49710,7 @@ func construct_SA(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucket
 	}
 }
 
-var __func__3 = [13]int8{'c', 'o', 'n', 's', 't', 'r', 'u', 'c', 't', '_', 'S', 'A'}
+var __func__3 = [13]uint8{'c', 'o', 'n', 's', 't', 'r', 'u', 'c', 't', '_', 'S', 'A'}
 
 // C documentation
 //
@@ -49866,7 +49863,7 @@ func construct_BWT(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintptr, bucke
 	return int32((int64(orig) - int64(SA)) / 4)
 }
 
-var __func__4 = [14]int8{'c', 'o', 'n', 's', 't', 'r', 'u', 'c', 't', '_', 'B', 'W', 'T'}
+var __func__4 = [14]uint8{'c', 'o', 'n', 's', 't', 'r', 'u', 'c', 't', '_', 'B', 'W', 'T'}
 
 // C documentation
 //
@@ -50043,7 +50040,7 @@ func construct_BWT_indexes(tls *libc.TLS, T uintptr, SA uintptr, bucket_A uintpt
 	return int32((int64(orig) - int64(SA)) / 4)
 }
 
-var __func__5 = [22]int8{'c', 'o', 'n', 's', 't', 'r', 'u', 'c', 't', '_', 'B', 'W', 'T', '_', 'i', 'n', 'd', 'e', 'x', 'e', 's'}
+var __func__5 = [22]uint8{'c', 'o', 'n', 's', 't', 'r', 'u', 'c', 't', '_', 'B', 'W', 'T', '_', 'i', 'n', 'd', 'e', 'x', 'e', 's'}
 
 /*---------------------------------------------------------------------------*/
 
@@ -50463,7 +50460,7 @@ func FASTCOVER_computeFrequency(tls *libc.TLS, freqs uintptr, ctx uintptr) {
 	}
 }
 
-var __func__6 = [27]int8{'F', 'A', 'S', 'T', 'C', 'O', 'V', 'E', 'R', '_', 'c', 'o', 'm', 'p', 'u', 't', 'e', 'F', 'r', 'e', 'q', 'u', 'e', 'n', 'c', 'y'}
+var __func__6 = [27]uint8{'F', 'A', 'S', 'T', 'C', 'O', 'V', 'E', 'R', '_', 'c', 'o', 'm', 'p', 'u', 't', 'e', 'F', 'r', 'e', 'q', 'u', 'e', 'n', 'c', 'y'}
 
 // C documentation
 //
@@ -50609,7 +50606,7 @@ func FASTCOVER_ctx_init(tls *libc.TLS, ctx uintptr, samplesBuffer uintptr, sampl
 	return uint64(0)
 }
 
-var __func__7 = [19]int8{'F', 'A', 'S', 'T', 'C', 'O', 'V', 'E', 'R', '_', 'c', 't', 'x', '_', 'i', 'n', 'i', 't'}
+var __func__7 = [19]uint8{'F', 'A', 'S', 'T', 'C', 'O', 'V', 'E', 'R', '_', 'c', 't', 'x', '_', 'i', 'n', 'i', 't'}
 
 // C documentation
 //
@@ -51544,7 +51541,7 @@ func isIncluded(tls *libc.TLS, in uintptr, container uintptr, length size_t) (r 
 		if !(u < length) {
 			break
 		} /* works because end of buffer is a noisy guard band */
-		if int32(*(*int8)(unsafe.Pointer(ip + uintptr(u)))) != int32(*(*int8)(unsafe.Pointer(into + uintptr(u)))) {
+		if libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(ip + uintptr(u)))) != libc.Int32FromUint8(*(*uint8)(unsafe.Pointer(into + uintptr(u)))) {
 			break
 		}
 		goto _1
@@ -52366,7 +52363,7 @@ _cleanup:
 	return eSize
 }
 
-var __func__8 = [21]int8{'Z', 'D', 'I', 'C', 'T', '_', 'a', 'n', 'a', 'l', 'y', 'z', 'e', 'E', 'n', 't', 'r', 'o', 'p', 'y'}
+var __func__8 = [21]uint8{'Z', 'D', 'I', 'C', 'T', '_', 'a', 'n', 'a', 'l', 'y', 'z', 'e', 'E', 'n', 't', 'r', 'o', 'p', 'y'}
 
 // C documentation
 //
@@ -52496,7 +52493,7 @@ func ZDICT_finalizeDictionary(tls *libc.TLS, dictBuffer uintptr, dictBufferCapac
 	return r
 }
 
-var __func__9 = [25]int8{'Z', 'D', 'I', 'C', 'T', '_', 'f', 'i', 'n', 'a', 'l', 'i', 'z', 'e', 'D', 'i', 'c', 't', 'i', 'o', 'n', 'a', 'r', 'y'}
+var __func__9 = [25]uint8{'Z', 'D', 'I', 'C', 'T', '_', 'f', 'i', 'n', 'a', 'l', 'i', 'z', 'e', 'D', 'i', 'c', 't', 'i', 'o', 'n', 'a', 'r', 'y'}
 
 func ZDICT_addEntropyTablesFromBuffer_advanced(tls *libc.TLS, dictBuffer uintptr, dictContentSize size_t, dictBufferCapacity size_t, samplesBuffer uintptr, samplesSizes uintptr, nbSamples uint32, params ZDICT_params_t) (r size_t) {
 	bp := tls.Alloc(16)
@@ -52918,4 +52915,4 @@ var g_debuglevel int32
 
 var __ccgo_ts = (*reflect.StringHeader)(unsafe.Pointer(&__ccgo_ts1)).Data
 
-var __ccgo_ts1 = "Unspecified error code\x00No error detected\x00Error (generic)\x00Unknown frame descriptor\x00Version not supported\x00Unsupported frame parameter\x00Frame requires too much memory for decoding\x00Data corruption detected\x00Restored data doesn't match checksum\x00Header of Literals' block doesn't respect format specification\x00Unsupported parameter\x00Unsupported combination of parameters\x00Parameter is out of bound\x00Context should be init first\x00Allocation error : not enough memory\x00workSpace buffer is not large enough\x00Operation not authorized at current processing stage\x00tableLog requires too much memory : unsupported\x00Unsupported max Symbol Value : too large\x00Specified maxSymbolValue is too small\x00This mode cannot generate an uncompressed block\x00pledged buffer stability condition is not respected\x00Dictionary is corrupted\x00Dictionary mismatch\x00Cannot create Dictionary from provided samples\x00Destination buffer is too small\x00Src size is incorrect\x00Operation on NULL destination buffer\x00Operation made no progress over multiple calls, due to output buffer being full\x00Operation made no progress over multiple calls, due to input being empty\x00Frame index is too large\x00An I/O error occurred when reading/seeking\x00Destination buffer is wrong\x00Source buffer is wrong\x00Block-level external sequence producer returned an error code\x00External sequences are not valid\x00\x001.5.7\x00table phase - alignment initial allocation failed!\x00NULL pointer!\x00dst buf too small for uncompressed block\x00 \x00not enough space for compression\x00not enough space\x00FSE_normalizeCount failed\x00FSE_writeNCount failed\x00FSE_buildCTable_wksp failed\x00impossible to reach\x00not enough space remaining\x00ZSTD_encodeSequences failed\x00ZSTD_compressSubBlock_literal failed\x00ZSTD_compressSubBlock_sequences failed\x00ZSTD_compressSubBlock failed\x00ZSTD_noCompressBlock failed\x00not compatible with static CCtx\x00can only set params in cctx init stage\x00MT not compatible with static alloc\x00unknown parameter\x00Param out of bounds\x00The context is in the wrong stage!\x00Can't override parameters with cdict attached (some must be inherited from the cdict).\x00Can't set pledgedSrcSize when not in init stage.\x00ZSTD_createCDict_advanced failed\x00Can't load a dictionary when cctx is not in init stage.\x00static CCtx can't allocate for an internal copy of dictionary\x00allocation failed for dictionary content\x00Can't ref a dict when ctx not in init stage.\x00Can't ref a pool when ctx not in init stage.\x00Can't ref a prefix when ctx not in init stage.\x00Reset parameters is only possible during init stage.\x00Estimate CCtx size is supported for single-threaded compression only.\x00failed a workspace allocation in ZSTD_reset_matchState\x00cctx size estimate failed!\x00static cctx : no resize\x00couldn't allocate prevCBlock\x00couldn't allocate nextCBlock\x00couldn't allocate tmpWorkspace\x00Can't copy a ctx that's not in init stage.\x00ZSTD_compressLiterals failed\x00Can't fit seq hdr in output buf!\x00ZSTD_buildSequencesStatistics failed!\x00ZSTD_entropyCompressSeqStore_internal failed\x00External sequence producer returned error code %lu\x00Got zero sequences from external sequence producer for a non-empty src buffer!\x00nbExternalSeqs == outSeqsCapacity but lastSeq is not a block delimiter!\x00Long-distance matching with external sequence producer enabled is not currently supported.\x00External sequences imply too large a block!\x00Failed to copy external sequences to seqStore!\x00Not enough space to copy sequences\x00targetCBlockSize != 0\x00nbWorkers != 0\x00ZSTD_compress2 failed\x00HIST_count_wksp failed\x00HUF_buildCTable_wksp\x00ZSTD_buildBlockEntropyStats_literals failed\x00ZSTD_buildBlockEntropyStats_sequences failed\x00Block header doesn't fit\x00ZSTD_entropyCompressSeqStore failed!\x00copyBlockSequences failed\x00Nocompress block failed\x00RLE compress block failed\x00Compressing single block from splitBlock_internal() failed!\x00Compressing chunk failed!\x00ZSTD_buildSeqStore failed\x00Uncompressible block\x00Splitting blocks failed!\x00ZSTD_compressSuperBlock failed\x00ZSTD_compressBlock_targetCBlockSize_body failed\x00not enough space to store compressed block\x00ZSTD_compressBlock_targetCBlockSize failed\x00ZSTD_compressBlock_splitBlock failed\x00ZSTD_compressBlock_internal failed\x00dst buf is too small to fit worst-case frame header size.\x00Not enough room for skippable frame\x00Src size too large for skippable frame\x00Skippable frame magic number variant not supported\x00dst buf is too small to write frame trailer empty block.\x00missing init (ZSTD_compressBegin)\x00ZSTD_writeFrameHeader failed\x00ZSTD_compress_frameChunk failed\x00%s\x00error : pledgedSrcSize = %u, while realSrcSize >= %u\x00input is larger than a block\x00ZSTD_loadCEntropy failed\x00ZSTD_compress_insertDictionary failed\x00init missing\x00no room for epilogue\x00no room for checksum\x00ZSTD_compressContinue_internal failed\x00ZSTD_writeEpilogue failed\x00error : pledgedSrcSize = %u, while realSrcSize = %u\x00call ZSTD_initCStream() first!\x00ZSTD_compressEnd failed\x00ZSTD_compressContinue failed\x00ZSTD_c_stableInBuffer enabled but input differs!\x00ZSTD_c_stableOutBuffer enabled but output size differs!\x00External sequence producer isn't supported with nbWorkers >= 1\x00invalid output buffer\x00invalid input buffer\x00invalid endDirective\x00stableInBuffer condition not respected: wrong src pointer\x00stableInBuffer condition not respected: externally modified pos\x00compressStream2 initialization failed\x00invalid buffers\x00ZSTDMT_compressStream_generic failed\x00ZSTD_compressStream2_simpleArgs failed\x00Offset too large!\x00Matchlength too small for the minMatch\x00Sequence validation failed\x00Not enough memory allocated. Try adjusting ZSTD_c_minMatch.\x00Block delimiter not found.\x00Blocksize doesn't agree with block delimiter!\x00delimiter format error : both matchlength and offset must be == 0\x00Reached end of sequences without finding a block delimiter\x00Error while determining block size with explicit delimiters\x00sequences incorrectly define a too large block\x00sequences define a frame longer than source\x00No room for empty frame block header\x00Error while trying to determine block size\x00Bad sequence copy\x00not enough dstCapacity to write a new compressed block\x00Compressing sequences of block failed\x00ZSTD_rleCompressBlock failed\x00CCtx initialization failed\x00Compressing blocks failed!\x00Requires at least 1 end-of-block\x00Error while trying to determine nb of sequences for a block\x00discrepancy: Sequences require more literals than present in buffer\x00Bad sequence conversion\x00ZSTD_compressSequencesAndLiterals cannot generate an uncompressed block\x00literals must be entirely and exactly consumed\x00Sequences must represent a total of exactly srcSize=%zu\x00literals buffer is not large enough: must be at least 8 bytes larger than litSize (risk of read out-of-bound)\x00This mode is only compatible with explicit delimiters\x00This mode is not compatible with Sequence validation\x00this mode is not compatible with frame checksum\x00ZSTD_compressStream2(,,ZSTD_e_end) failed\x00Failed to init fast loop args\x00corruption\x00Failed to init asm args\x00Hash set is full!\x00Expanded hashset allocation failed!\x00not compatible with static DCtx\x00invalid parameter : src==NULL, but srcSize>0\x00first bytes don't correspond to any supported magic number\x00reserved bits, must be zero\x00headerSize too small\x00invalid block type\x00Block decompression failure\x00invalid skippable frame\x00At least one frame successfully completed, but following bytes are garbage: it's more likely to be a srcSize error, specifying more input bytes than size of frame(s). Note: one could be unlucky, it might be a corruption error instead, happening right at the place where we expect zstd magic bytes. But this is _much_ less likely than a srcSize field error.\x00input not entirely consumed\x00not allowed\x00Block Size Exceeds Maximum\x00ZSTD_copyRawBlock failed\x00Decompressed Block Size Exceeds Maximum\x00dict is too small\x00Failed to allocate memory for hash set!\x00Static dctx does not support multiple DDicts!\x00ZSTD_d_stableOutBuffer enabled but output differs!\x00forbidden. in: pos: %u   vs size: %u\x00forbidden. out: pos: %u   vs size: %u\x00First few bytes detected incorrect\x00ZSTD_obm_stable passed but ZSTD_outBuffer is too small\x00should never happen\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need up to 5 for case 3\x00NULL not handled\x00Not enough literals (%zu) for the 4-streams mode (min %u)\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize = 3\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize+1 = 3\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize+1 = 4\x00impossible\x00extraneous data present in the Sequences section\x00ZSTD_buildSeqTable failed\x00last match must fit within dstBuffer\x00try to read beyond literal buffer\x00output should not catch up to and overwrite literal buffer\x00remaining lit must fit within dstBuffer\x00invalid dst\x00Total samples size is too large (%u MB), maximum size is %u MB\n\x00Total number of training samples is %u and is invalid.\x00Total number of testing samples is %u and is invalid.\x00Training on %u samples of total size %u\n\x00Testing on %u samples of total size %u\n\x00Failed to allocate scratch buffers\n\x00Constructing partial suffix array\n\x00Computing frequencies\n\x00WARNING: The maximum dictionary size %u is too large compared to the source size %u! size(source)/size(dictionary) = %f, but it should be >= 10! This may lead to a subpar dictionary! We recommend training on sources at least 10x, and preferably 100x the size of the dictionary! \n\x00Breaking content into %u epochs of size %u\n\x00\r%u%%       \x00\r%79s\r\x00Cover parameters incorrect\n\x00Cover must have at least one input file\n\x00dictBufferCapacity must be at least %u\n\x00Failed to allocate dmer map: out of memory\n\x00Building dictionary\n\x00Constructed dictionary of size %u\n\x00Failed to allocate buffers: out of memory\n\x00Failed to select dictionary\n\x00Incorrect parameters\n\x00Trying %u different sets of parameters\n\x00d=%u\n\x00Failed to initialize context\n\x00k=%u\n\x00Failed to allocate parameters\n\x000 <= ssize\x00/tmp/zstd-build-2714034871/zstd.c\x00ssize < STACK_SIZE\x00T[s] == c1\x00((s + 1) < n) && (T[s] <= T[s + 1])\x00T[s - 1] <= T[s]\x00k < j\x00k != NULL\x00((s == 0) && (T[s] == c1)) || (s < 0)\x00T[s - 1] >= T[s]\x00i < k\x00s < 0\x00ctx->nbTrainSamples >= 5\x00ctx->nbTrainSamples <= ctx->nbSamples\x00Total number of training samples is %u and is invalid\n\x00Total number of testing samples is %u and is invalid.\n\x00Failed to allocate scratch buffers \n\x00nbSamples >= 5\x00Failed to allocate frequency table \n\x00FASTCOVER parameters incorrect\n\x00FASTCOVER must have at least one input file\n\x00Incorrect splitPoint\n\x00Incorrect accel\n\x00Incorrect k\n\x00%c\x00\n\x00found %3u matches of length >= %i at pos %7u  \x00Selected dict at position %u, of length %u : saves %u (ratio: %.2f)  \n\x00\r%70s\r\x00sample set too large : reduced to %u MB ...\n\x00sorting %u files of total size %u MB ...\n\x00finding patterns ... \n\x00minimum ratio : %u \n\x00\r%4.2f %% \r\x00warning : ZSTD_compressBegin_usingCDict failed \n\x00warning : could not compress sample size %u \n\x00Not enough memory \n\x00Offset Code Frequencies : \n\x00%2u :%7u \n\x00 HUF_buildCTable error \n\x00warning : pathological dataset : literals are not compressible : samples are noisy or too regular \n\x00maxNbBits==9\x00FSE_normalizeCount error with offcodeCount \n\x00FSE_normalizeCount error with matchLengthCount \n\x00FSE_normalizeCount error with litLengthCount \n\x00HUF_writeCTable error \n\x00FSE_writeNCount error with offcodeNCount \n\x00FSE_writeNCount error with matchLengthNCount \n\x00FSE_writeNCount error with litlengthNCount \n\x00not enough space to write RepOffsets \n\x00statistics ... \n\x00dictBufferCapacity too small to fit max repcode\x00dictSize <= dictBufferCapacity\x00outDictContent + dictContentSize == (BYTE*)dictBuffer + dictSize\x00\n %u segments found, of total size %u \n\x00list %u best segments \n\x00%3u:%3u bytes at pos %8u, savings %7u bytes |\x00| \n\x00!  warning : selected content significantly smaller than requested (%u < %u) \n\x00!  consider increasing the number of samples (total size : %u MB)\n\x00!  consider increasing selectivity to produce larger dictionary (-s%u) \n\x00!  note : larger dictionaries are not necessarily better, test its efficiency on samples \n\x00!  note : calculated dictionary significantly larger than requested (%u > %u) \n\x00!  consider increasing dictionary size, or produce denser dictionary (-s%u) \n\x00!  always test dictionary efficiency on real samples \n\x00"
+var __ccgo_ts1 = "Unspecified error code\x00No error detected\x00Error (generic)\x00Unknown frame descriptor\x00Version not supported\x00Unsupported frame parameter\x00Frame requires too much memory for decoding\x00Data corruption detected\x00Restored data doesn't match checksum\x00Header of Literals' block doesn't respect format specification\x00Unsupported parameter\x00Unsupported combination of parameters\x00Parameter is out of bound\x00Context should be init first\x00Allocation error : not enough memory\x00workSpace buffer is not large enough\x00Operation not authorized at current processing stage\x00tableLog requires too much memory : unsupported\x00Unsupported max Symbol Value : too large\x00Specified maxSymbolValue is too small\x00This mode cannot generate an uncompressed block\x00pledged buffer stability condition is not respected\x00Dictionary is corrupted\x00Dictionary mismatch\x00Cannot create Dictionary from provided samples\x00Destination buffer is too small\x00Src size is incorrect\x00Operation on NULL destination buffer\x00Operation made no progress over multiple calls, due to output buffer being full\x00Operation made no progress over multiple calls, due to input being empty\x00Frame index is too large\x00An I/O error occurred when reading/seeking\x00Destination buffer is wrong\x00Source buffer is wrong\x00Block-level external sequence producer returned an error code\x00External sequences are not valid\x00\x001.5.7\x00table phase - alignment initial allocation failed!\x00NULL pointer!\x00dst buf too small for uncompressed block\x00 \x00not enough space for compression\x00not enough space\x00FSE_normalizeCount failed\x00FSE_writeNCount failed\x00FSE_buildCTable_wksp failed\x00impossible to reach\x00not enough space remaining\x00ZSTD_encodeSequences failed\x00ZSTD_compressSubBlock_literal failed\x00ZSTD_compressSubBlock_sequences failed\x00ZSTD_compressSubBlock failed\x00ZSTD_noCompressBlock failed\x00not compatible with static CCtx\x00can only set params in cctx init stage\x00MT not compatible with static alloc\x00unknown parameter\x00Param out of bounds\x00The context is in the wrong stage!\x00Can't override parameters with cdict attached (some must be inherited from the cdict).\x00Can't set pledgedSrcSize when not in init stage.\x00ZSTD_createCDict_advanced failed\x00Can't load a dictionary when cctx is not in init stage.\x00static CCtx can't allocate for an internal copy of dictionary\x00allocation failed for dictionary content\x00Can't ref a dict when ctx not in init stage.\x00Can't ref a pool when ctx not in init stage.\x00Can't ref a prefix when ctx not in init stage.\x00Reset parameters is only possible during init stage.\x00Estimate CCtx size is supported for single-threaded compression only.\x00failed a workspace allocation in ZSTD_reset_matchState\x00cctx size estimate failed!\x00static cctx : no resize\x00couldn't allocate prevCBlock\x00couldn't allocate nextCBlock\x00couldn't allocate tmpWorkspace\x00Can't copy a ctx that's not in init stage.\x00ZSTD_compressLiterals failed\x00Can't fit seq hdr in output buf!\x00ZSTD_buildSequencesStatistics failed!\x00ZSTD_entropyCompressSeqStore_internal failed\x00External sequence producer returned error code %lu\x00Got zero sequences from external sequence producer for a non-empty src buffer!\x00nbExternalSeqs == outSeqsCapacity but lastSeq is not a block delimiter!\x00Long-distance matching with external sequence producer enabled is not currently supported.\x00External sequences imply too large a block!\x00Failed to copy external sequences to seqStore!\x00Not enough space to copy sequences\x00targetCBlockSize != 0\x00nbWorkers != 0\x00ZSTD_compress2 failed\x00HIST_count_wksp failed\x00HUF_buildCTable_wksp\x00ZSTD_buildBlockEntropyStats_literals failed\x00ZSTD_buildBlockEntropyStats_sequences failed\x00Block header doesn't fit\x00ZSTD_entropyCompressSeqStore failed!\x00copyBlockSequences failed\x00Nocompress block failed\x00RLE compress block failed\x00Compressing single block from splitBlock_internal() failed!\x00Compressing chunk failed!\x00ZSTD_buildSeqStore failed\x00Uncompressible block\x00Splitting blocks failed!\x00ZSTD_compressSuperBlock failed\x00ZSTD_compressBlock_targetCBlockSize_body failed\x00not enough space to store compressed block\x00ZSTD_compressBlock_targetCBlockSize failed\x00ZSTD_compressBlock_splitBlock failed\x00ZSTD_compressBlock_internal failed\x00dst buf is too small to fit worst-case frame header size.\x00Not enough room for skippable frame\x00Src size too large for skippable frame\x00Skippable frame magic number variant not supported\x00dst buf is too small to write frame trailer empty block.\x00missing init (ZSTD_compressBegin)\x00ZSTD_writeFrameHeader failed\x00ZSTD_compress_frameChunk failed\x00%s\x00error : pledgedSrcSize = %u, while realSrcSize >= %u\x00input is larger than a block\x00ZSTD_loadCEntropy failed\x00ZSTD_compress_insertDictionary failed\x00init missing\x00no room for epilogue\x00no room for checksum\x00ZSTD_compressContinue_internal failed\x00ZSTD_writeEpilogue failed\x00error : pledgedSrcSize = %u, while realSrcSize = %u\x00call ZSTD_initCStream() first!\x00ZSTD_compressEnd failed\x00ZSTD_compressContinue failed\x00ZSTD_c_stableInBuffer enabled but input differs!\x00ZSTD_c_stableOutBuffer enabled but output size differs!\x00External sequence producer isn't supported with nbWorkers >= 1\x00invalid output buffer\x00invalid input buffer\x00invalid endDirective\x00stableInBuffer condition not respected: wrong src pointer\x00stableInBuffer condition not respected: externally modified pos\x00compressStream2 initialization failed\x00invalid buffers\x00ZSTDMT_compressStream_generic failed\x00ZSTD_compressStream2_simpleArgs failed\x00Offset too large!\x00Matchlength too small for the minMatch\x00Sequence validation failed\x00Not enough memory allocated. Try adjusting ZSTD_c_minMatch.\x00Block delimiter not found.\x00Blocksize doesn't agree with block delimiter!\x00delimiter format error : both matchlength and offset must be == 0\x00Reached end of sequences without finding a block delimiter\x00Error while determining block size with explicit delimiters\x00sequences incorrectly define a too large block\x00sequences define a frame longer than source\x00No room for empty frame block header\x00Error while trying to determine block size\x00Bad sequence copy\x00not enough dstCapacity to write a new compressed block\x00Compressing sequences of block failed\x00ZSTD_rleCompressBlock failed\x00CCtx initialization failed\x00Compressing blocks failed!\x00Requires at least 1 end-of-block\x00Error while trying to determine nb of sequences for a block\x00discrepancy: Sequences require more literals than present in buffer\x00Bad sequence conversion\x00ZSTD_compressSequencesAndLiterals cannot generate an uncompressed block\x00literals must be entirely and exactly consumed\x00Sequences must represent a total of exactly srcSize=%zu\x00literals buffer is not large enough: must be at least 8 bytes larger than litSize (risk of read out-of-bound)\x00This mode is only compatible with explicit delimiters\x00This mode is not compatible with Sequence validation\x00this mode is not compatible with frame checksum\x00ZSTD_compressStream2(,,ZSTD_e_end) failed\x00Failed to init fast loop args\x00corruption\x00Failed to init asm args\x00Hash set is full!\x00Expanded hashset allocation failed!\x00not compatible with static DCtx\x00invalid parameter : src==NULL, but srcSize>0\x00first bytes don't correspond to any supported magic number\x00reserved bits, must be zero\x00headerSize too small\x00invalid block type\x00Block decompression failure\x00invalid skippable frame\x00At least one frame successfully completed, but following bytes are garbage: it's more likely to be a srcSize error, specifying more input bytes than size of frame(s). Note: one could be unlucky, it might be a corruption error instead, happening right at the place where we expect zstd magic bytes. But this is _much_ less likely than a srcSize field error.\x00input not entirely consumed\x00not allowed\x00Block Size Exceeds Maximum\x00ZSTD_copyRawBlock failed\x00Decompressed Block Size Exceeds Maximum\x00dict is too small\x00Failed to allocate memory for hash set!\x00Static dctx does not support multiple DDicts!\x00ZSTD_d_stableOutBuffer enabled but output differs!\x00forbidden. in: pos: %u   vs size: %u\x00forbidden. out: pos: %u   vs size: %u\x00First few bytes detected incorrect\x00ZSTD_obm_stable passed but ZSTD_outBuffer is too small\x00should never happen\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need up to 5 for case 3\x00NULL not handled\x00Not enough literals (%zu) for the 4-streams mode (min %u)\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize = 3\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize+1 = 3\x00srcSize >= MIN_CBLOCK_SIZE == 2; here we need lhSize+1 = 4\x00impossible\x00extraneous data present in the Sequences section\x00ZSTD_buildSeqTable failed\x00last match must fit within dstBuffer\x00try to read beyond literal buffer\x00output should not catch up to and overwrite literal buffer\x00remaining lit must fit within dstBuffer\x00invalid dst\x00Total samples size is too large (%u MB), maximum size is %u MB\n\x00Total number of training samples is %u and is invalid.\x00Total number of testing samples is %u and is invalid.\x00Training on %u samples of total size %u\n\x00Testing on %u samples of total size %u\n\x00Failed to allocate scratch buffers\n\x00Constructing partial suffix array\n\x00Computing frequencies\n\x00WARNING: The maximum dictionary size %u is too large compared to the source size %u! size(source)/size(dictionary) = %f, but it should be >= 10! This may lead to a subpar dictionary! We recommend training on sources at least 10x, and preferably 100x the size of the dictionary! \n\x00Breaking content into %u epochs of size %u\n\x00\r%u%%       \x00\r%79s\r\x00Cover parameters incorrect\n\x00Cover must have at least one input file\n\x00dictBufferCapacity must be at least %u\n\x00Failed to allocate dmer map: out of memory\n\x00Building dictionary\n\x00Constructed dictionary of size %u\n\x00Failed to allocate buffers: out of memory\n\x00Failed to select dictionary\n\x00Incorrect parameters\n\x00Trying %u different sets of parameters\n\x00d=%u\n\x00Failed to initialize context\n\x00k=%u\n\x00Failed to allocate parameters\n\x000 <= ssize\x00/tmp/zstd-build-3522643984/zstd.c\x00ssize < STACK_SIZE\x00T[s] == c1\x00((s + 1) < n) && (T[s] <= T[s + 1])\x00T[s - 1] <= T[s]\x00k < j\x00k != NULL\x00((s == 0) && (T[s] == c1)) || (s < 0)\x00T[s - 1] >= T[s]\x00i < k\x00s < 0\x00ctx->nbTrainSamples >= 5\x00ctx->nbTrainSamples <= ctx->nbSamples\x00Total number of training samples is %u and is invalid\n\x00Total number of testing samples is %u and is invalid.\n\x00Failed to allocate scratch buffers \n\x00nbSamples >= 5\x00Failed to allocate frequency table \n\x00FASTCOVER parameters incorrect\n\x00FASTCOVER must have at least one input file\n\x00Incorrect splitPoint\n\x00Incorrect accel\n\x00Incorrect k\n\x00%c\x00\n\x00found %3u matches of length >= %i at pos %7u  \x00Selected dict at position %u, of length %u : saves %u (ratio: %.2f)  \n\x00\r%70s\r\x00sample set too large : reduced to %u MB ...\n\x00sorting %u files of total size %u MB ...\n\x00finding patterns ... \n\x00minimum ratio : %u \n\x00\r%4.2f %% \r\x00warning : ZSTD_compressBegin_usingCDict failed \n\x00warning : could not compress sample size %u \n\x00Not enough memory \n\x00Offset Code Frequencies : \n\x00%2u :%7u \n\x00 HUF_buildCTable error \n\x00warning : pathological dataset : literals are not compressible : samples are noisy or too regular \n\x00maxNbBits==9\x00FSE_normalizeCount error with offcodeCount \n\x00FSE_normalizeCount error with matchLengthCount \n\x00FSE_normalizeCount error with litLengthCount \n\x00HUF_writeCTable error \n\x00FSE_writeNCount error with offcodeNCount \n\x00FSE_writeNCount error with matchLengthNCount \n\x00FSE_writeNCount error with litlengthNCount \n\x00not enough space to write RepOffsets \n\x00statistics ... \n\x00dictBufferCapacity too small to fit max repcode\x00dictSize <= dictBufferCapacity\x00outDictContent + dictContentSize == (BYTE*)dictBuffer + dictSize\x00\n %u segments found, of total size %u \n\x00list %u best segments \n\x00%3u:%3u bytes at pos %8u, savings %7u bytes |\x00| \n\x00!  warning : selected content significantly smaller than requested (%u < %u) \n\x00!  consider increasing the number of samples (total size : %u MB)\n\x00!  consider increasing selectivity to produce larger dictionary (-s%u) \n\x00!  note : larger dictionaries are not necessarily better, test its efficiency on samples \n\x00!  note : calculated dictionary significantly larger than requested (%u > %u) \n\x00!  consider increasing dictionary size, or produce denser dictionary (-s%u) \n\x00!  always test dictionary efficiency on real samples \n\x00"
